@@ -110,21 +110,6 @@ type PartialRun {
   specs: [RunSpec]!
 }
 
-<<<<<<< HEAD
-type Run {
-  runId: ID!
-  createdAt: DateTime!
-  meta: RunMeta
-  specs: [FullRunSpec]
-  tests: Int!
-  failures: Int!
-  passes: Int!
-  pending: Int!
-  skipped: Int!
-}
-
-=======
->>>>>>> a3a1026... Handle no tests case. Closes #42
 type RunSpec {
   spec: String!
   instanceId: String!

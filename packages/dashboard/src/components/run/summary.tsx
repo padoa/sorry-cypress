@@ -12,15 +12,6 @@ import {
   ModalBody,
   ModalFooter,
 } from 'bold-ui';
-<<<<<<< HEAD
-import {
-  getRunTestsOverall,
-  updateCacheOnDeleteRun,
-  getRunMetaData,
-} from '@src/lib/run';
-import { Run, useDeleteRunMutation } from '../../generated/graphql';
-import './summary.css';
-=======
 import { getRunTestsOverall, updateCacheOnDeleteRun } from '@src/lib/run';
 import { Commit } from '@src/components/commit/commit';
 import { Paper } from '../common/';
@@ -29,7 +20,6 @@ import {
   useDeleteRunMutation,
   FullRunSpec,
 } from '../../generated/graphql';
->>>>>>> a3a1026... Handle no tests case. Closes #42
 
 type RunSummaryProps = {
   run: Partial<Run> & { runId: string; specs: Array<FullRunSpec> };

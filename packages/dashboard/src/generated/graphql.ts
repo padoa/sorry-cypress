@@ -310,14 +310,7 @@ export type GetRunQueryVariables = {
 
 export type GetRunQuery = { __typename?: 'Query' } & {
   run?: Maybe<
-<<<<<<< HEAD
-    { __typename?: 'Run' } & Pick<
-      Run,
-      'tests' | 'failures' | 'passes' | 'pending' | 'skipped' | 'runId'
-    > & {
-=======
     { __typename?: 'Run' } & Pick<Run, 'runId'> & {
->>>>>>> a3a1026... Handle no tests case. Closes #42
         meta?: Maybe<
           { __typename?: 'RunMeta' } & Pick<
             RunMeta,
@@ -336,24 +329,6 @@ export type GetRunQuery = { __typename?: 'Query' } & {
               >;
             }
         >;
-<<<<<<< HEAD
-        specs?: Maybe<
-          Array<
-            Maybe<
-              { __typename?: 'FullRunSpec' } & Pick<
-                FullRunSpec,
-                'spec' | 'instanceId' | 'claimed'
-              > & {
-                  results?: Maybe<
-                    { __typename?: 'InstanceResults' } & Pick<
-                      InstanceResults,
-                      'videoUrl'
-                    > & {
-                        cypressConfig?: Maybe<
-                          { __typename?: 'CypressConfig' } & Pick<
-                            CypressConfig,
-                            'video' | 'videoUploadOnPasses'
-=======
         specs: Array<
           Maybe<
             { __typename?: 'FullRunSpec' } & Pick<
@@ -378,7 +353,6 @@ export type GetRunQuery = { __typename?: 'Query' } & {
                               InstanceTest,
                               'title' | 'state'
                             >
->>>>>>> a3a1026... Handle no tests case. Closes #42
                           >
                         >;
                         tests: Array<
@@ -416,20 +390,7 @@ export type GetRunsFeedQueryVariables = {
 export type GetRunsFeedQuery = { __typename?: 'Query' } & {
   runFeed: { __typename?: 'RunFeed' } & Pick<RunFeed, 'cursor' | 'hasMore'> & {
       runs: Array<
-<<<<<<< HEAD
-        { __typename?: 'Run' } & Pick<
-          Run,
-          | 'tests'
-          | 'failures'
-          | 'passes'
-          | 'pending'
-          | 'skipped'
-          | 'runId'
-          | 'createdAt'
-        > & {
-=======
         { __typename?: 'Run' } & Pick<Run, 'runId' | 'createdAt'> & {
->>>>>>> a3a1026... Handle no tests case. Closes #42
             meta?: Maybe<
               { __typename?: 'RunMeta' } & Pick<
                 RunMeta,
@@ -448,16 +409,6 @@ export type GetRunsFeedQuery = { __typename?: 'Query' } & {
                   >;
                 }
             >;
-<<<<<<< HEAD
-            specs?: Maybe<
-              Array<
-                Maybe<
-                  { __typename?: 'FullRunSpec' } & Pick<
-                    FullRunSpec,
-                    'spec' | 'instanceId' | 'claimed'
-                  >
-                >
-=======
             specs: Array<
               Maybe<
                 { __typename?: 'FullRunSpec' } & Pick<
@@ -497,7 +448,6 @@ export type GetRunsFeedQuery = { __typename?: 'Query' } & {
                         }
                     >;
                   }
->>>>>>> a3a1026... Handle no tests case. Closes #42
               >
             >;
           }
