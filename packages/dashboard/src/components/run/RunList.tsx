@@ -16,7 +16,7 @@ const RunList: FC<RunListProps> = ({
   const searchFilters = search
     ? [
         {
-          key: 'meta.ciBuildId',
+          key: 'meta.commit.branch',
           like: search,
         },
       ]

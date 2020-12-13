@@ -32,7 +32,7 @@ export function RunsView({
     <>
       <PageControls>
         <SearchField
-          placeholder="Enter run build id"
+          placeholder="Enter branch name"
           onSearch={(value) => setSearch(value)}
         />
       </PageControls>
