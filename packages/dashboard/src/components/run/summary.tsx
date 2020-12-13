@@ -152,7 +152,7 @@ export function RunSummary({ run }: RunSummaryProps) {
   return (
     <Paper>
       <FlexRow>
-        <HeaderLink to={`/run/${runId}`}>{meta?.ciBuildId}</HeaderLink>
+        <HeaderLink to={`/run/${runId}`}><b>{meta?.commit.branch}:</b> {meta?.commit.message}</HeaderLink>
         <DeleteButton runId={runId} ciBuildId={meta?.ciBuildId || ''} />
       </FlexRow>
       <Grid>
