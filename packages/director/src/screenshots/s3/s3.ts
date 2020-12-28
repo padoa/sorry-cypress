@@ -2,8 +2,6 @@ import aws from 'aws-sdk';
 import {
   S3_BUCKET,
   S3_REGION,
-  S3_ACL,
-  S3_READ_URL_PREFIX,
   S3_IMAGE_KEY_PREFIX,
   S3_VIDEO_KEY_PREFIX,
   FILES_EXPIRATION,
@@ -41,7 +39,6 @@ export const getUploadUrl = async ({
     Key: key,
     Expires,
     ContentType,
-    ACL: S3_ACL,
   };
 
   const s3ParamsRead = {
@@ -60,7 +57,7 @@ export const getUploadUrl = async ({
     const signedReadURL = s3.getSignedUrl('getObject', s3ParamsRead);
     s3.getSignedUrl(
       'putObject',
-      s3Params,
+      s3ParamsUpload,
       (error: Error, uploadUrl: string) => {
         if (error) {
           return reject(error);
