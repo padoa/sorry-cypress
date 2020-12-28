@@ -6,6 +6,9 @@ import {
   S3_READ_URL_PREFIX,
   S3_IMAGE_KEY_PREFIX,
   S3_VIDEO_KEY_PREFIX,
+  FILES_EXPIRATION,
+  S3_ENDPOINT,
+  S3_FORCE_PATH_STYLE,
 } from './config';
 import { S3SignedUploadResult } from './types';
 import { AssetUploadInstruction } from '@src/types';
@@ -18,6 +21,8 @@ const VideoContentType = 'video/mp4';
 const s3 = new aws.S3({
   region: S3_REGION,
   signatureVersion: 'v4',
+  endpoint: S3_ENDPOINT,
+  s3ForcePathStyle: S3_FORCE_PATH_STYLE,
 });
 
 interface GetUploadURLParams {
@@ -29,7 +34,7 @@ interface GetUploadURLParams {
 export const getUploadUrl = async ({
   key,
   ContentType = ImageContentType,
-  Expires = 60,
+  Expires = FILES_EXPIRATION,
 }: GetUploadURLParams): Promise<S3SignedUploadResult> => {
   const s3Params = {
     Bucket: S3_BUCKET,
@@ -39,7 +44,20 @@ export const getUploadUrl = async ({
     ACL: S3_ACL,
   };
 
+  const s3ParamsRead = {
+      Bucket: S3_BUCKET,
+      Expires,
+      Key: key,
+    };
+  
+    const s3ParamsUpload = {
+      Expires,
+      ContentType,
+      ...s3ParamsRead,
+    };
+
   return new Promise((resolve, reject) => {
+    const signedReadURL = s3.getSignedUrl('getObject', s3ParamsRead);
     s3.getSignedUrl(
       'putObject',
       s3Params,
@@ -48,7 +66,7 @@ export const getUploadUrl = async ({
           return reject(error);
         }
         return resolve({
-          readUrl: `${S3_READ_URL_PREFIX || BUCKET_URL}/${key}`,
+          readUrl: signedReadURL,
           uploadUrl,
         });
       }
@@ -61,6 +79,7 @@ export const getImageUploadUrl = async (
 ): Promise<AssetUploadInstruction> =>
   getUploadUrl({
     key: `${sanitizeS3KeyPrefix(S3_IMAGE_KEY_PREFIX)}${key}.png`,
+    Expires: FILES_EXPIRATION,
   });
 
 export const getVideoUploadUrl = async (
@@ -69,5 +88,5 @@ export const getVideoUploadUrl = async (
   getUploadUrl({
     key: `${sanitizeS3KeyPrefix(S3_VIDEO_KEY_PREFIX)}${key}.mp4`,
     ContentType: VideoContentType,
-    Expires: 90,
+    Expires: FILES_EXPIRATION,
   });
