@@ -66,11 +66,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /health-check-mongo
-              port: {{ .Values.api.service.port }}
+              port: {{ .Values.director.service.port }}
           readinessProbe:
             httpGet:
               path: /health-check-mongo
-              port: {{ .Values.api.service.port }}
+              port: {{ .Values.director.service.port }}
           ports:
             - name: {{ .Values.director.service.name }}
               containerPort: {{ .Values.director.service.port }}
