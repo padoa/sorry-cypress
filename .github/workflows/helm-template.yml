@@ -1,0 +1,16 @@
+name: Helm Template Syntax Check
+
+on:
+  push:
+    paths:
+    - 'k8s/**'
+
+jobs:
+  Template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pull Helm Image
+        run: docker pull dtzar/helm-kubectl
+      - name: Helm Template
+        run: docker run --rm -v $(pwd):/config dtzar/helm-kubectl helm template k8s/sorry-cypress --debug
