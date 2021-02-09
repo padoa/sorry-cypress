@@ -33,6 +33,12 @@ api:
     limits:
       cpu: 1.0
       memory: 550Mi
+  serviceMonitoring:
+    enabled: true
+    bearer_token_secret_key: prometheus_bearer
+    path: /metrics
+    interval: 15s
+    timeout: 10s # < interval
 
 dashboard:
   enabled: true
