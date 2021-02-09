@@ -64,8 +64,7 @@ export const getRunWithSpecs: ExecutionDriver['getRunWithSpecs'] = async (
     ).pop()
   );
 
-export const getRunById = async (id: string) =>
-  await getMongoDB().collection('runs').findOne<Run>({ runId: id });
+export const getRunById = async (id: string): Promise<Run> => getMongoDB().collection('runs').findOne<Run>({ runId: id });
 
 export const createRun = async (run: Run) => {
   try {
