@@ -9,7 +9,7 @@ aliases:
       git checkout ${CIRCLE_SHA1}
 
 jobs:
-  build-director-and-push:
+  Build Director:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
@@ -32,7 +32,7 @@ jobs:
               docker push ${ACR_HOST}/padoa-tools/sorry-cypress-director:$FULL_TAG
             fi
 
-  build-api-and-push:
+  Build Api:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
@@ -55,7 +55,7 @@ jobs:
               docker push ${ACR_HOST}/padoa-tools/sorry-cypress-api:$FULL_TAG
             fi
 
-  build-dashboard-and-push:
+  Build Dashboard:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
@@ -77,15 +77,27 @@ jobs:
               docker build --progress plain -t ${ACR_HOST}/padoa-tools/sorry-cypress-dashboard:$FULL_TAG .
               docker push ${ACR_HOST}/padoa-tools/sorry-cypress-dashboard:$FULL_TAG
             fi
+
+  Tag For Deploy:
+    machine:
+      image: ubuntu-1604:201903-01
+    working_directory: ~/project
+    steps:
+      - run: *checkout
+      - run:
+          name: Tag For Deploy
+          command: |
+            git tag ${CIRCLE_BRANCH}_deploy -f
+            git push origin ${CIRCLE_BRANCH}_deploy -f
 workflows:
   build-and-push:
     jobs:
-      - build-director-and-push:
+      - Build Director:
           context:
             - REGISTRY
-      - build-api-and-push:
+      - Build Api:
           context:
             - REGISTRY
-      - build-dashboard-and-push:
+      - Build Dashboard:
           context:
             - REGISTRY
