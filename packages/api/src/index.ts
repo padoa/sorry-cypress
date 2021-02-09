@@ -8,6 +8,7 @@ import { SpecsAPI } from './datasources/specs';
 import { resolvers } from './resolvers';
 import { typeDefs } from './schema/schema';
 import { pingDB } from "@src/lib/mongo";
+import { getMetrics } from "@src/lib/metrics";
 
 async function start() {
   const dataSources = {
@@ -29,6 +30,15 @@ async function start() {
     await pingDB() ?
       res.sendStatus(200) :
       res.sendStatus(503);
+  });
+
+  app.get('/metrics', async (_, res) => {
+    try {
+      const metrics = await getMetrics();
+      res.send(metrics);
+    } catch (error) {
+      res.status(500).send({ error });
+    }
   });
 
   server.applyMiddleware({ app, path: '/' });
