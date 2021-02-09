@@ -79,10 +79,12 @@ jobs:
             fi
 
   Tag For Deploy:
-    machine:
-      image: ubuntu-1604:201903-01
-    working_directory: ~/project
+    docker:
+      - image: alpine:3.12
     steps:
+      - run:
+          name: Install Git
+          command: apk add --no-cache --no-progress git openssh-client
       - run: *checkout
       - run:
           name: Tag For Deploy
