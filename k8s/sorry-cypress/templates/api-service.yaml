@@ -7,6 +7,9 @@ metadata:
   labels:
     {{- include "sorrycypress.labels" . | nindent 4 }}
     component: api
+    {{- if .Values.api.serviceMonitoring.enabled }}
+    monitored: "true"
+  {{- end }}
 spec:
   type: {{ .Values.api.service.type }}
   ports:

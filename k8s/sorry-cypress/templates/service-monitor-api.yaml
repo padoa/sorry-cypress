@@ -1,0 +1,24 @@
+{{- with .Values.api.serviceMonitoring }}
+{{- if .enabled -}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: socket-io-proxy-service-monitor
+spec:
+  endpoints:
+    - path: {{ .path | quote }}
+      interval: {{ .interval }}
+      scrapeTimeout: {{ .timeout }}
+      port: {{ $.Values.api.service.name }}
+      bearerTokenSecret:
+        name: "sorry-cypress-secrets"
+        key: {{ .bearer_token_secret_key }}
+  # Match only current namespace
+  namespaceSelector: {}
+  selector:
+    matchLabels:
+      component: api
+      monitored: "true"
+{{- end }}
+{{- end }}
