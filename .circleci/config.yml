@@ -32,7 +32,7 @@ jobs:
               docker push ${ACR_HOST}/padoa-tools/sorry-cypress-director:$FULL_TAG
             fi
 
-  Build Api:
+  Build API:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
@@ -95,9 +95,14 @@ workflows:
       - Build Director:
           context:
             - REGISTRY
-      - Build Api:
+      - Build API:
           context:
             - REGISTRY
       - Build Dashboard:
           context:
             - REGISTRY
+      - Tag For Deploy:
+          requires:
+            - Build Director
+            - Build API
+            - Build Dashboard

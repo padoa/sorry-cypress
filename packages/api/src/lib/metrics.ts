@@ -8,7 +8,7 @@ interface PrometheusMetric {
 }
 
 const formatOneMetric = (rawMetric: PrometheusMetric): string => {
-  return `sorry_cypress_${rawMetric.metricName}{${rawMetric.labels.map(({label, value }) => `${label}=${value}`).join(', ')}} ${rawMetric.value}`;
+  return `sorry_cypress_${rawMetric.metricName}{${rawMetric.labels.map(({label, value }) => `${label}="${value}"`).join(', ')}} ${rawMetric.value}`;
 }
 
 const formatMetrics = (rawMetrics: Array<PrometheusMetric>): string => {
