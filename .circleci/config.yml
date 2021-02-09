@@ -4,6 +4,13 @@ aliases:
   - &checkout # Custom checkout because circle doesnt use -depth 1 and our repo is 200Mo, went from 45s to 3s checkout
     name: checkout
     command: |
+      mkdir -p ~/.ssh
+      echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==' >> ~/.ssh/known_hosts
+      printf "%s" "$CHECKOUT_KEY" > ~/.ssh/id_rsa
+      chmod 0600 ~/.ssh/id_rsa
+      git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
+      git config --global gc.auto 0 || true
+      git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
       git clone -n ${CIRCLE_REPOSITORY_URL} ~/project/
       cd ~/project/
       git checkout ${CIRCLE_SHA1}
@@ -79,10 +86,12 @@ jobs:
             fi
 
   Tag For Deploy:
-    machine:
-      image: ubuntu-1604:201903-01
-    working_directory: ~/project
+    docker:
+      - image: alpine:3.12
     steps:
+      - run:
+          name: Install Git
+          command: apk add --no-cache --no-progress git openssh-client
       - run: *checkout
       - run:
           name: Tag For Deploy
