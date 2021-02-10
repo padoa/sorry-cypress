@@ -115,7 +115,7 @@ mongo:
 cleanmongojob:
   enabled: true
   alert_severity: low
-  schedule: "0 * * * *"
+  schedule: "0/5 * * * *"
   limit_cpu: "200m"
   limit_memory: "300Mi"
   request_cpu: "50m"
