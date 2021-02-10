@@ -41,11 +41,7 @@ spec:
           containers:
             - name: {{ .Chart.Name }}
               command: ["/bin/sh", "-c"]
-              args:
-                - mongo "$MONGODB_URI";
-                  use $MONGODB_DATABASE;
-                  db.runs.deleteMany({"createdAt": { $lte: new Date(ISODate().getTime() - 1000 * 3600 * 24 * 7)}});
-                  db.instances.deleteMany({"results.stats.wallClockStartedAt": { $lte: new Date(ISODate().getTime() - 1000 * 3600 * 24 * 7)}});
+              args: ["mongo \"$MONGODB_URI\"; use $MONGODB_DATABASE; db.runs.deleteMany({\"createdAt\": { $lte: new Date(ISODate().getTime() - 1000 * 3600 * 24 * 7)}}); db.instances.deleteMany({\"results.stats.wallClockStartedAt\": { $lte: new Date(ISODate().getTime() - 1000 * 3600 * 24 * 7)}});"]
               env:
                 - name: MONGODB_DATABASE
                   value: sorry-cypress
