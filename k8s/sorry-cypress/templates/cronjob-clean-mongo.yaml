@@ -1,0 +1,62 @@
+{{- if .Values.cleanmongojob.enabled }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: clean-mongo-job
+  labels:  {{- include "sorrycypress.labels" . | nindent 4 }}
+    component: backend-recurrent-task
+    padoa.fr/alert-severity: {{ .Values.cleanmongojob.alert_severity | default "low" }}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "{{ .Values.cleanmongojob.schedule }}"
+  jobTemplate:
+    metadata:
+      labels: {{- include "sorrycypress.labels" . | nindent 8 }}
+        component: backend-recurrent-task
+        padoa.fr/alert-severity: {{ .Values.cleanmongojob.alert_severity | default "low" }}
+    spec:
+      backoffLimit: {{ .Values.cleanmongojob.backoff_limit | default 1 }}
+      template:
+        metadata:
+          labels: {{- include "sorrycypress.labels" . | nindent 12 }}
+            component: backend-recurrent-task
+            padoa.fr/alert-severity: {{ .Values.cleanmongojob.alert_severity | default "low" }}
+        spec:
+          {{- if .Values.nodeSelector }}
+          nodeSelector:
+          {{- toYaml .Values.nodeSelector | nindent 12 }}
+          {{- end }}
+          {{- if .Values.tolerations }}
+          tolerations:
+          {{- toYaml .Values.tolerations| nindent 12 }}
+          {{- end }}
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "sorrycypress.serviceAccountName" . }}
+          securityContext:
+          {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+            - name: {{ .Chart.Name }}-clean-mongo-job
+              command: ["/bin/sh", "-c"]
+              args: ["mongo \"$MONGODB_URI\"; use $MONGODB_DATABASE; db.runs.deleteMany({\"createdAt\": { $lte: new Date(ISODate().getTime() - 1000 * 3600 * 24 * 7)}}); db.instances.deleteMany({\"results.stats.wallClockStartedAt\": { $lte: new Date(ISODate().getTime() - 1000 * 3600 * 24 * 7)}});"]
+              env:
+                - name: MONGODB_DATABASE
+                  value: sorry-cypress
+                - name: MONGODB_URI
+                  value: "mongodb://{{ include "sorrycypress.fullname" . }}-mongo:{{ .Values.mongo.service.port }}"
+              resources:
+                limits:
+                  memory: {{ .Values.cleanmongojob.limit_memory | quote }}
+                  cpu: {{ .Values.cleanmongojob.limit_cpu | quote }}
+                requests:
+                  memory: {{ .Values.cleanmongojob.request_memory | quote }}
+                  cpu: {{ .Values.cleanmongojob.request_cpu | quote }}
+              securityContext:
+              {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.mongo.image.repository }}:{{ tpl .Values.mongo.image.tag . }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+          restartPolicy: OnFailure
+{{end}}
