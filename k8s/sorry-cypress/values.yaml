@@ -115,12 +115,12 @@ mongo:
 cleanmongojob:
   enabled: true
   alert_severity: low
-  schedule: "0/5 * * * *"
+  schedule: "0/2 * * * *"
   limit_cpu: "200m"
   limit_memory: "300Mi"
   request_cpu: "50m"
   request_memory: "200Mi"
-  backoff_limit: 1
+  backoff_limit: 20
 
 imagePullSecrets:
   - name: registry-secret
