@@ -39,7 +39,7 @@ jobs:
 
             # Build and push DIRECTOR
             mkdir tools
-            cp ./ci-tools/npm-registry/connect-to-npm-registry-ci.sh ./tools/connect-to-npm-registry-ci.sh
+            cp ./ci-tools/npm-registry/connect-to-npm-registry-ci.sh ~/project/packages/director/tools/connect-to-npm-registry-ci.sh
             cd ~/project/packages/director/
             if ! docker image pull ${ACR_HOST}/padoa-tools/sorry-cypress-director:$FULL_TAG ; then
               docker build --build-arg AZDO_NPM_REGISTRY_PULL_TOKEN=${AZDO_NPM_REGISTRY_PULL_TOKEN} --progress plain -t ${ACR_HOST}/padoa-tools/sorry-cypress-director:$FULL_TAG .
