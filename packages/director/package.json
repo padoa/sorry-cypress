@@ -26,6 +26,7 @@
     "release": "yarn version --no-git-tag-version"
   },
   "dependencies": {
+    "@padoa/express": "^0.0.0-a9ee1c4a8942d243876ffb07fd09ceb5fd38ef13",
     "ajv": "^6.12.5",
     "aws-sdk": "^2.518.0",
     "axios": "^0.21.1",
