@@ -20,7 +20,7 @@ export const setScreenshotUrl: ExecutionDriver['setScreenshotUrl'] = async (
   try {
     await modelsetScreenshotUrl(instanceId, screenshotId, screenshotURL);
   } catch {
-    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED);
+    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED, `Screenshot URL update failed for instanceId ${instanceId} and screenshotId ${screenshotId}.`);
   }
 };
 

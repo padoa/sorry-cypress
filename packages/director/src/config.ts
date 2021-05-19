@@ -2,6 +2,10 @@ import 'dotenv/config';
 
 export const PORT = process.env.PORT || 1234;
 
+export const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+export const LOG_INCOMING = process.env.LOG_INCOMING === 'true';
+
 export const DASHBOARD_URL =
   process.env.DASHBOARD_URL || `http://localhost:8080`;
 

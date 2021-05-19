@@ -1,5 +1,6 @@
 import mongodb from 'mongodb';
 import { MONGODB_URI, MONGODB_DATABASE } from '@src/config';
+import logger from "@src/padoa/logger";
 
 let db: mongodb.Db;
 let client: mongodb.MongoClient;
@@ -10,7 +11,7 @@ export const init = async () => {
   }
 
   client = await mongodb.connect(MONGODB_URI, { useNewUrlParser: true });
-  console.log('Successfully connected to MongoDB server');
+  logger.info('Successfully connected to MongoDB server');
 
   db = client.db(MONGODB_DATABASE);
 
@@ -26,7 +27,7 @@ export const pingDB = async () => {
     const mongoResponse = await getMongoDB().command({ ping: 1 });
     return mongoResponse.ok === 1;
   } catch (e) {
-    console.log(`Error while pinging MongoDB : ${e}`);
+    logger.error(`Error while pinging MongoDB : ${e}`);
     return false;
   }
 }
