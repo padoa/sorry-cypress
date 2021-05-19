@@ -5,7 +5,7 @@ import { handleCreateInstance, handleUpdateInstance } from './api/instances';
 import { getExecutionDriver } from '@src/drivers';
 import { logRequestsMiddlewaresFactory } from '@src/padoa/log-request-middleware';
 import reportingMiddleware from '@src/padoa/logger-middleware';
-import { apiErrorHandler, createConverterErrorHandler, notFound, wrapAsync } from "@padoa/express";
+import { apiErrorHandler, AsyncRequestHandler, createConverterErrorHandler, notFound, wrapAsync } from "@padoa/express";
 import { appErrorConverter } from "@src/padoa/app-error-converter";
 import logger from "@src/padoa/logger";
 
@@ -41,9 +41,9 @@ app.get('/ping', (_, res) => {
 
 /* ROUTES */
 
-app.post('/runs', blockKeys, wrapAsync(handleCreateRun));
-app.post('/runs/:runId/instances', wrapAsync(handleCreateInstance));
-app.put('/instances/:instanceId', wrapAsync(handleUpdateInstance));
+app.post('/runs', blockKeys, wrapAsync(handleCreateRun as AsyncRequestHandler));
+app.post('/runs/:runId/instances', wrapAsync(handleCreateInstance as AsyncRequestHandler));
+app.put('/instances/:instanceId', wrapAsync(handleUpdateInstance as AsyncRequestHandler));
 
 /*
 4. PUT https://api.cypress.io/instances/<instanceId>/stdout
