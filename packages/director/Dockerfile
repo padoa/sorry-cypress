@@ -5,8 +5,7 @@ ARG AZDO_NPM_REGISTRY_PULL_TOKEN
 WORKDIR /app
 
 COPY package*.json  ./
-COPY ../ci-tools/npm-registry/connect-to-npm-registry-ci.sh ./tools/connect-to-npm-registry-ci.sh
-RUN ../tools/connect-to-npm-registry-ci.sh $AZDO_NPM_REGISTRY_PULL_TOKEN
+RUN ./tools/connect-to-npm-registry-ci.sh $AZDO_NPM_REGISTRY_PULL_TOKEN
 RUN npm install
 
 COPY src ./src
