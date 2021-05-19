@@ -4,11 +4,13 @@ import { hookEvents } from '@src/lib/hooksEnums';
 import { reportToHook } from '@src/lib/hooksReporter';
 import { CreateRunParameters } from '@src/types';
 import { RequestHandler } from 'express';
+import logger from "@src/padoa/logger";
+
 export const blockKeys: RequestHandler = (req, res, next) => {
   const { recordKey } = req.body;
 
   if (!isKeyAllowed(recordKey)) {
-    console.log(`<< Record key is not allowed`, { recordKey });
+    logger.error({ recordKey }, `<< Record key is not allowed`);
 
     return res
       .status(403)
@@ -25,7 +27,7 @@ export const handleCreateRun: RequestHandler<
   const { group, ciBuildId } = req.body;
   const executionDriver = await getExecutionDriver();
 
-  console.log(`>> Machine is joining / creating  a run`, { ciBuildId, group });
+  logger.info({ ciBuildId, group }, `>> Machine is joining / creating  a run`);
 
   const response = await executionDriver.createRun(req.body);
   const runWithSpecs = await executionDriver.getRunWithSpecs(response.runId);
@@ -36,8 +38,8 @@ export const handleCreateRun: RequestHandler<
     project: await executionDriver.getProjectById(runWithSpecs.meta.projectId),
   });
 
-  console.log(`<< RUN_START hook called`, response);
+  logger.info(response, `<< RUN_START hook called`);
 
-  console.log(`<< Responding to machine`, response);
+  logger.info(response, `<< Responding to machine`);
   return res.json(response);
 };

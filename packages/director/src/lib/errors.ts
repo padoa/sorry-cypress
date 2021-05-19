@@ -1,7 +1,7 @@
 export class AppError extends Error {
   code: string;
-  constructor(code: string) {
-    super('AppError');
+  constructor(code: string, msg?: string) {
+    super(`AppError. Code: ${code}. Message : ${msg ? msg : 'No message'}`);
     this.code = code;
   }
 }

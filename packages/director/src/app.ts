@@ -3,29 +3,47 @@ import bodyParser from 'body-parser';
 import { blockKeys, handleCreateRun } from './api/runs';
 import { handleCreateInstance, handleUpdateInstance } from './api/instances';
 import { getExecutionDriver } from '@src/drivers';
+import { logRequestsMiddlewaresFactory } from '@src/padoa/log-request-middleware';
+import reportingMiddleware from '@src/padoa/logger-middleware';
+import { apiErrorHandler, createConverterErrorHandler, notFound, wrapAsync } from "@padoa/express";
+import { appErrorConverter } from "@src/padoa/app-error-converter";
+import logger from "@src/padoa/logger";
 
 export const app = express();
 
+/* MIDDLEWARES FOR INCOMING REQUESTS */
+
+app.use(logRequestsMiddlewaresFactory.startTimer)
 app.use(
   bodyParser.json({
     limit: '50mb',
   })
 );
+app.use(reportingMiddleware());
+app.use(logRequestsMiddlewaresFactory.logRequest);
+
+/* HEALTH CHECKS */
 
 app.get('/', (_, res) =>
   res.redirect('https://github.com/agoldis/sorry-cypress')
 );
 
-app.get('/health-check-mongo', async (_, res) => {
+app.get('/health-check-mongo', wrapAsync(async (_, res) => {
   const executionDriver = await getExecutionDriver();
   (await executionDriver.pingDB()) ?
     res.sendStatus(200) :
     res.sendStatus(503);
+}));
+
+app.get('/ping', (_, res) => {
+  res.send(`${Date.now()}: sorry-cypress-director is live`);
 });
 
-app.post('/runs', blockKeys, handleCreateRun);
-app.post('/runs/:runId/instances', handleCreateInstance);
-app.put('/instances/:instanceId', handleUpdateInstance);
+/* ROUTES */
+
+app.post('/runs', blockKeys, wrapAsync(handleCreateRun));
+app.post('/runs/:runId/instances', wrapAsync(handleCreateInstance));
+app.put('/instances/:instanceId', wrapAsync(handleUpdateInstance));
 
 /*
 4. PUT https://api.cypress.io/instances/<instanceId>/stdout
@@ -33,12 +51,15 @@ app.put('/instances/:instanceId', handleUpdateInstance);
 */
 app.put('/instances/:instanceId/stdout', (req, res) => {
   const { instanceId } = req.params;
-  console.log(`>> [not implemented] Received stdout for instance`, {
+  logger.info({
     instanceId,
-  });
+  }, `>> [not implemented] Received stdout for instance`, );
   return res.sendStatus(200);
 });
 
-app.get('/ping', (_, res) => {
-  res.send(`${Date.now()}: sorry-cypress-director is live`);
-});
+/* HANDLERS */
+
+app.use(notFound);
+app.use(createConverterErrorHandler([appErrorConverter]));
+app.use(logRequestsMiddlewaresFactory.logErrors);
+app.use(apiErrorHandler);

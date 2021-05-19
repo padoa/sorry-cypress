@@ -30,7 +30,7 @@ export const insertInstance = async ({
       });
   } catch (error) {
     if (error.code && error.code === 11000) {
-      throw new AppError(INSTANCE_EXISTS);
+      throw new AppError(INSTANCE_EXISTS, `Instance with id ${instanceId} for run id ${runId} already exists.`);
     }
     throw error;
   }
@@ -61,7 +61,7 @@ export const setInstanceResults = async (
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(INSTANCE_RESULTS_UPDATE_FAILED);
+    throw new AppError(INSTANCE_RESULTS_UPDATE_FAILED, `Results update failed for instance with id ${instanceId}.`);
   }
 };
 
@@ -89,7 +89,7 @@ export const setScreenshotUrl = async (
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED);
+    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED, `Screenshot URL update failed for instanceId ${instanceId} and screenshotId ${screenshotId}.`);
   }
 };
 
@@ -110,6 +110,6 @@ export const setvideoUrl = async (instanceId: string, videoUrl: string) => {
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(VIDEO_URL_UPDATE_FAILED);
+    throw new AppError(VIDEO_URL_UPDATE_FAILED, `Video URL update failed for instanceId ${instanceId}.`);
   }
 };

@@ -26,7 +26,9 @@
     "release": "yarn version --no-git-tag-version"
   },
   "dependencies": {
-    "@padoa/express": "^0.0.0-a9ee1c4a8942d243876ffb07fd09ceb5fd38ef13",
+    "@padoa/async-local-storage": "^1.0.1",
+    "@padoa/express": "^1.2.2",
+    "@padoa/logger": "^1.0.2",
     "ajv": "^6.12.5",
     "aws-sdk": "^2.518.0",
     "axios": "^0.21.1",
@@ -35,6 +37,7 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "graphql": "^15.3.0",
+    "hyperid": "^2.1.0",
     "lodash": "^4.17.19",
     "md5": "^2.2.1",
     "minio": "^7.0.15",
@@ -56,6 +59,7 @@
     "@types/minio": "^7.0.5",
     "@types/mongodb": "^3.3.1",
     "@types/node": "^14.11.2",
+    "@types/pino": "^6.3.8",
     "@types/uuid": "^3.4.5",
     "babel-plugin-module-resolver": "^4.0.0",
     "jest": "^25.5.4",

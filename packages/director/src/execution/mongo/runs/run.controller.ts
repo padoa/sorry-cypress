@@ -107,7 +107,7 @@ export const getNextTask: ExecutionDriver['getNextTask'] = async ({
 }): Promise<Task> => {
   const run = await getById(runId);
   if (!run) {
-    throw new AppError(RUN_NOT_EXIST);
+    throw new AppError(RUN_NOT_EXIST, `Run with id ${runId} does not exist.`);
   }
 
   // all specs claimed

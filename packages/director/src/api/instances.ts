@@ -9,17 +9,19 @@ import {
   AssetUploadInstruction,
   UpdateInstanceResponse,
 } from '@src/types';
+import logger from "@src/padoa/logger";
 
 export const handleCreateInstance: RequestHandler = async (req, res) => {
   const { groupId, machineId } = req.body;
   const { runId } = req.params;
   const executionDriver = await getExecutionDriver();
 
-  console.log(`>> Machine is requesting a new task`, {
+  logger.info({
     runId,
     machineId,
     groupId,
-  });
+  },
+  `>> Machine is requesting a new task`);
 
   try {
     const {
@@ -29,7 +31,7 @@ export const handleCreateInstance: RequestHandler = async (req, res) => {
     } = await executionDriver.getNextTask({ runId, machineId, groupId });
 
     if (instance === null) {
-      console.log(`<< All tasks claimed`, { runId, machineId });
+      logger.info({ runId, machineId }, `<< All tasks claimed`);
       return res.json({
         spec: null,
         instanceId: null,
@@ -48,10 +50,10 @@ export const handleCreateInstance: RequestHandler = async (req, res) => {
       project: await executionDriver.getProjectById(run.meta.projectId),
     });
 
-    console.log(`<< INSTANCE_START hook called`, instance.instanceId);
+    logger.info({ instanceId: instance.instanceId}, `<< INSTANCE_START hook called`, );
 
     //Instance Start
-    console.log(`<< Sending new task to machine`, instance);
+    logger.info(instance, `<< Sending new task to machine`);
     return res.json({
       spec: instance.spec,
       instanceId: instance.instanceId,
@@ -72,7 +74,7 @@ export const handleUpdateInstance: RequestHandler = async (req, res) => {
   const executionDriver = await getExecutionDriver();
   const screenshotsDriver = await getScreenshotsDriver();
 
-  console.log(`>> Received instance result`, { instanceId });
+  logger.info({ instanceId }, `>> Received instance result`);
   await executionDriver.setInstanceResults(instanceId, result);
 
   const instance = await executionDriver.getInstanceById(instanceId);
@@ -96,7 +98,7 @@ export const handleUpdateInstance: RequestHandler = async (req, res) => {
     },
     project,
   }).then(() => {
-    console.log(`<< INSTANCE_FINISH hook called`, instance.instanceId);
+    logger.info({ instanceId: instance.instanceId }, `<< INSTANCE_FINISH hook called`, );
     // We should probably add a flag to the actual run here aswell
     // We should also probably do a check to see if all specs passed and set a flag of success or fail
     if (!isRunStillRunning) {
@@ -108,7 +110,7 @@ export const handleUpdateInstance: RequestHandler = async (req, res) => {
         },
         project,
       });
-      console.log(`<< RUN_FINISH hook called`, run.runId);
+      logger.info({ runId: run.runId }, `<< RUN_FINISH hook called`, );
     }
   });
 
@@ -139,11 +141,11 @@ export const handleUpdateInstance: RequestHandler = async (req, res) => {
     });
   }
 
-  console.log(`<< Sending assets upload URLs`, {
+  logger.info({
     instanceId,
     screenshotUploadUrls,
     videoUploadInstructions,
-  });
+  }, `<< Sending assets upload URLs`, );
 
   const responsePayload: UpdateInstanceResponse = {
     screenshotUploadUrls,

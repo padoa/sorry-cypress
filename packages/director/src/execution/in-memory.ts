@@ -110,7 +110,7 @@ const getNextTask: ExecutionDriver['getNextTask'] = async ({
   groupId,
 }): Promise<Task> => {
   if (!runs[runId]) {
-    throw new AppError(RUN_NOT_EXIST);
+    throw new AppError(RUN_NOT_EXIST, `Run with id ${runId} does not exist.`);
   }
 
   const unclaimedSpec = getFirstUnclaimedSpec(runs[runId], groupId);
@@ -151,7 +151,7 @@ const setInstanceResults = async (
   results: InstanceResult
 ) => {
   if (!instances[instanceId]) {
-    throw new AppError(INSTANCE_NOT_EXIST);
+    throw new AppError(INSTANCE_NOT_EXIST, `Instance with id ${instanceId} does not exist.`);
   }
   instances[instanceId] = { ...instances[instanceId], results };
 };

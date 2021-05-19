@@ -1,5 +1,6 @@
 import { app } from './app';
 import { PORT } from './config';
+import logger from "@src/padoa/logger";
 export * from './types';
 
 async function main() {
@@ -7,11 +8,11 @@ async function main() {
     throw error;
   });
   app.listen(PORT, () => {
-    console.log(`🚀 Director service is ready at http://0.0.0.0:${PORT}/...`);
+    logger.info(`🚀 Director service is ready at http://0.0.0.0:${PORT}/...`);
   });
 }
 
 main().catch((error) => {
-  console.error(error);
+  logger.error(error);
   process.exit(1);
 });
