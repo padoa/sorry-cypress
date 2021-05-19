@@ -5,9 +5,10 @@ import { handleCreateInstance, handleUpdateInstance } from './api/instances';
 import { getExecutionDriver } from '@src/drivers';
 import { logRequestsMiddlewaresFactory } from '@src/padoa/log-request-middleware';
 import reportingMiddleware from '@src/padoa/logger-middleware';
-import { apiErrorHandler, AsyncRequestHandler, createConverterErrorHandler, notFound, wrapAsync } from "@padoa/express";
+import { apiErrorHandler, AsyncRequestHandler, createConverterErrorHandler, notFound } from "@padoa/express";
 import { appErrorConverter } from "@src/padoa/app-error-converter";
 import logger from "@src/padoa/logger";
+import { routeTo } from "@src/padoa/route-wrapper";
 
 export const app = express();
 
@@ -28,7 +29,7 @@ app.get('/', (_, res) =>
   res.redirect('https://github.com/agoldis/sorry-cypress')
 );
 
-app.get('/health-check-mongo', wrapAsync(async (_, res) => {
+app.get('/health-check-mongo', routeTo(async (_, res) => {
   const executionDriver = await getExecutionDriver();
   (await executionDriver.pingDB()) ?
     res.sendStatus(200) :
@@ -41,9 +42,9 @@ app.get('/ping', (_, res) => {
 
 /* ROUTES */
 
-app.post('/runs', blockKeys, wrapAsync(handleCreateRun as AsyncRequestHandler));
-app.post('/runs/:runId/instances', wrapAsync(handleCreateInstance as AsyncRequestHandler));
-app.put('/instances/:instanceId', wrapAsync(handleUpdateInstance as AsyncRequestHandler));
+app.post('/runs', blockKeys, routeTo(handleCreateRun as AsyncRequestHandler));
+app.post('/runs/:runId/instances', routeTo(handleCreateInstance as AsyncRequestHandler));
+app.put('/instances/:instanceId', routeTo(handleUpdateInstance as AsyncRequestHandler));
 
 /*
 4. PUT https://api.cypress.io/instances/<instanceId>/stdout
