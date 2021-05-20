@@ -45,7 +45,7 @@ export const setInstanceResults = async (
   instanceId: string,
   results: InstanceResult
 ) => {
-  const { matchedCount, modifiedCount } = await getMongoDB()
+  const { result } = await getMongoDB()
     .collection(COLLECTION_NAME)
     .updateOne(
       {
@@ -58,10 +58,10 @@ export const setInstanceResults = async (
       }
     );
 
-  if (matchedCount && modifiedCount) {
+  if (result.ok === 1) {
     return;
   } else {
-    throw new AppError(INSTANCE_RESULTS_UPDATE_FAILED, `Results update failed for instance with id ${instanceId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
+    throw new AppError(INSTANCE_RESULTS_UPDATE_FAILED, `Results update failed for instance with id ${instanceId}.`);
   }
 };
 
@@ -70,7 +70,7 @@ export const setScreenshotUrl = async (
   screenshotId: string,
   screenshotURL: string
 ) => {
-  const { matchedCount, modifiedCount } = await getMongoDB()
+  const { result } = await getMongoDB()
     .collection(COLLECTION_NAME)
     .updateOne(
       {
@@ -86,15 +86,15 @@ export const setScreenshotUrl = async (
       }
     );
 
-  if (matchedCount && modifiedCount) {
+  if (result.ok === 1) {
     return;
   } else {
-    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED, `Screenshot URL update failed for instanceId ${instanceId} and screenshotId ${screenshotId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
+    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED, `Screenshot URL update failed for instanceId ${instanceId} and screenshotId ${screenshotId}.`);
   }
 };
 
 export const setvideoUrl = async (instanceId: string, videoUrl: string) => {
-  const { matchedCount, modifiedCount } = await getMongoDB()
+  const { result } = await getMongoDB()
     .collection(COLLECTION_NAME)
     .updateOne(
       {
@@ -107,9 +107,9 @@ export const setvideoUrl = async (instanceId: string, videoUrl: string) => {
       }
     );
 
-  if (matchedCount && modifiedCount) {
+  if (result.ok === 1) {
     return;
   } else {
-    throw new AppError(VIDEO_URL_UPDATE_FAILED, `Video URL update failed for instanceId ${instanceId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
+    throw new AppError(VIDEO_URL_UPDATE_FAILED, `Video URL update failed for instanceId ${instanceId}.`);
   }
 };
