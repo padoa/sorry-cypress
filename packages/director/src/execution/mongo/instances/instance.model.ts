@@ -61,7 +61,7 @@ export const setInstanceResults = async (
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(INSTANCE_RESULTS_UPDATE_FAILED, `Results update failed for instance with id ${instanceId}.`);
+    throw new AppError(INSTANCE_RESULTS_UPDATE_FAILED, `Results update failed for instance with id ${instanceId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
   }
 };
 
@@ -89,7 +89,7 @@ export const setScreenshotUrl = async (
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED, `Screenshot URL update failed for instanceId ${instanceId} and screenshotId ${screenshotId}.`);
+    throw new AppError(SCREENSHOT_URL_UPDATE_FAILED, `Screenshot URL update failed for instanceId ${instanceId} and screenshotId ${screenshotId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
   }
 };
 
@@ -110,6 +110,6 @@ export const setvideoUrl = async (instanceId: string, videoUrl: string) => {
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(VIDEO_URL_UPDATE_FAILED, `Video URL update failed for instanceId ${instanceId}.`);
+    throw new AppError(VIDEO_URL_UPDATE_FAILED, `Video URL update failed for instanceId ${instanceId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
   }
 };

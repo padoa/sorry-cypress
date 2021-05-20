@@ -127,6 +127,6 @@ export const setSpecClaimed = async (
   if (matchedCount && modifiedCount) {
     return;
   } else {
-    throw new AppError(CLAIM_FAILED, `Claim failed for instance id ${instanceId}, run id ${runId} and machine id ${machineId}.`);
+    throw new AppError(CLAIM_FAILED, `Claim failed for instance id ${instanceId}, run id ${runId} and machine id ${machineId}. ${ matchedCount ? 'No element modified' : 'No element found'}`);
   }
 };
