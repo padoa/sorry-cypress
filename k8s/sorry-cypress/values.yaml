@@ -83,6 +83,12 @@ director:
     annotations:
       kubernetes.io/ingress.class: traefik
       traefik.ingress.kubernetes.io/router.tls: 'true'
+  probe:
+    readiness:
+      initialDelaySeconds: 5
+      timeoutSeconds: 3
+    liveness:
+      timeoutSeconds: 3
   resources:
     requests:
       cpu: 100m
