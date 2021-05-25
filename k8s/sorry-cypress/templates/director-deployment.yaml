@@ -64,14 +64,18 @@ spec:
                   name: sorry-cypress-secrets
                   key: aws_secret_access_key
           livenessProbe:
-            httpGet:
-              path: /health-check-mongo
-              port: {{ .Values.director.service.port }}
+            exec:
+              command:
+              - sh
+              - -c
+              - curl --fail http://localhost:{{ .Values.director.service.port }}/health-check-mongo
             timeoutSeconds: {{ .Values.director.probe.liveness.timeoutSeconds }}
           readinessProbe:
-            httpGet:
-              path: /health-check-mongo
-              port: {{ .Values.director.service.port }}
+            exec:
+              command:
+              - sh
+              - -c
+              - curl --fail http://localhost:{{ .Values.director.service.port }}/health-check-mongo
             initialDelaySeconds: {{ .Values.director.probe.readiness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.director.probe.readiness.timeoutSeconds }}
           ports:
