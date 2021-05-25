@@ -67,13 +67,13 @@ spec:
             httpGet:
               path: /health-check-mongo
               port: {{ .Values.director.service.port }}
-              timeoutSeconds: {{ .Values.director.probe.liveness.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.director.probe.liveness.timeoutSeconds }}
           readinessProbe:
             httpGet:
               path: /health-check-mongo
               port: {{ .Values.director.service.port }}
-              initialDelaySeconds: {{ .Values.director.probe.readiness.initialDelaySeconds }}
-              timeoutSeconds: {{ .Values.director.probe.readiness.timeoutSeconds }}
+            initialDelaySeconds: {{ .Values.director.probe.readiness.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.director.probe.readiness.timeoutSeconds }}
           ports:
             - name: {{ .Values.director.service.name }}
               containerPort: {{ .Values.director.service.port }}
