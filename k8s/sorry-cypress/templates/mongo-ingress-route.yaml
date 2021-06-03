@@ -1,0 +1,14 @@
+{{- if .Values.tcpRoute.enabled }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: {{ .Release.Name }}-ingress-tcp-{{ .Values.tcpRoute.entrypointName }}
+spec:
+  entryPoints:
+    - {{ .Values.tcpRoute.entrypointName }}
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: {{ include "sorrycypress.fullname" . }}-mongo
+          port: {{ .Values.mongo.service.port }}
+{{- end }}

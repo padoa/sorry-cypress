@@ -40,7 +40,7 @@ spec:
             - name: MONGODB_DATABASE
               value: sorry-cypress
             - name: MONGODB_URI
-              value: "mongodb://{{ include "sorrycypress.fullname" . }}-mongo:{{ .Values.mongo.service.port }}"
+              value: "mongodb://{{ .Values.connectMongo.host }}:{{ .Values.connectMongo.port }}"
             - name: SCREENSHOTS_DRIVER
               value: ../screenshots/s3.driver
             - name: S3_BUCKET

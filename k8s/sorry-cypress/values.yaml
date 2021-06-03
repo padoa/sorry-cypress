@@ -118,6 +118,12 @@ mongo:
       cpu: 1.0
       memory: 2048Mi
 
+connectMongo:
+  port: 27017
+
+tcpRoute:
+  enabled: false
+
 cleanmongojob:
   enabled: true
   alert_severity: low
