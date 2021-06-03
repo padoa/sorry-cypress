@@ -36,7 +36,7 @@ spec:
             - name: MONGODB_DATABASE
               value: sorry-cypress
             - name: MONGODB_URI
-              value: "mongodb://{{ include "sorrycypress.fullname" . }}-mongo:{{ .Values.mongo.service.port }}"
+              value: "mongodb://{{ .Values.connectMongo.host }}:{{ .Values.connectMongo.port }}"
           ports:
             - name: {{ .Values.api.service.name }}
               containerPort: {{ .Values.api.service.port }}
