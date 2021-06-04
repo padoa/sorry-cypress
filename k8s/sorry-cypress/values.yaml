@@ -144,9 +144,13 @@ podSecurityContext: {}
 
 securityContext: {}
 
-nodeSelector: {}
-
-tolerations: []
+nodeSelector:
+  dedicated: "ToolkitNode"
+tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "ToolkitNode"
+    effect: "NoSchedule"
 
 affinity: {}
 
