@@ -134,12 +134,7 @@ cleanmongojob:
   request_memory: "200Mi"
   backoff_limit: 20
 
-registry:
-  username: 'vault:secret/data/infra/registries/padoa.azurecr.io#username'
-  password: 'vault:secret/data/infra/registries/padoa.azurecr.io#password'
-
-imagePullSecrets:
-  - name: registry-secret
+imagePullSecrets: []
 
 image:
   pullPolicy: IfNotPresent
