@@ -68,13 +68,13 @@ const projectAggregation = {
 };
 
 const lookupAggregation = {
-  $lookup: {
-    from: 'instances',
-    localField: 'specsFull',
-    foreignField: 'instanceId',
-    as: 'specsFull',
-  },
-};
+  "$lookup": {
+    "from": "instances",
+    "let": { instancesId: "$specsFull" },
+    "pipeline": [{ $match: { $expr: { $in: ["$instanceId", "$$instancesId"] } } }, { "$project": { "results.cypressConfig": 0 } }],
+    "as": "specsFull"
+  }
+}
 
 export class RunsAPI extends DataSource {
   async initialize() {
@@ -82,9 +82,9 @@ export class RunsAPI extends DataSource {
   }
 
   async getRunFeed({
-    cursor,
-    filters,
-  }: {
+                     cursor,
+                     filters,
+                   }: {
     filters: AggregationFilter[];
     cursor: string | false;
   }) {
@@ -92,12 +92,12 @@ export class RunsAPI extends DataSource {
       ...filtersToAggregations(filters),
       getSortByAggregation(),
       cursor
-        ? {
-            $match: {
-              _id: { $lt: new ObjectID(cursor) },
-            },
-          }
-        : null,
+      ? {
+        $match: {
+          _id: { $lt: new ObjectID(cursor) },
+        },
+      }
+      : null,
       {
         // get one extra to know if there's more
         $limit: PAGE_LIMIT + 1,
@@ -107,16 +107,16 @@ export class RunsAPI extends DataSource {
     ].filter(negate(isNil));
 
     const results = (await (
-      await getMongoDB().collection('runs').aggregate(aggregationPipeline)
+    await getMongoDB().collection('runs').aggregate(aggregationPipeline)
     ).toArray()) as RunWithFullSpecs[];
 
     return runFeedReducer(results);
   }
 
   async getAllRuns({
-    orderDirection,
-    filters,
-  }: {
+                     orderDirection,
+                     filters,
+                   }: {
     orderDirection: OrderingOptions;
     filters: AggregationFilter[];
   }) {
@@ -128,38 +128,38 @@ export class RunsAPI extends DataSource {
     ].filter(negate(isNil));
 
     const results = (await getMongoDB()
-      .collection<Run>('runs')
-      .aggregate(aggregationPipeline)
-      .toArray()) as RunWithFullSpecs[];
+    .collection<Run>('runs')
+    .aggregate(aggregationPipeline)
+    .toArray()) as RunWithFullSpecs[];
 
     return results.map(mergeRunSpecs);
   }
 
   async getRunById(id: string) {
     const result = (await getMongoDB()
-      .collection<Run>('runs')
-      .aggregate([
-        matchRunAggregation(id),
-        projectAggregation,
-        lookupAggregation,
-      ])
-      .toArray()) as RunWithFullSpecs[];
+    .collection<Run>('runs')
+    .aggregate([
+      matchRunAggregation(id),
+      projectAggregation,
+      lookupAggregation,
+    ])
+    .toArray()) as RunWithFullSpecs[];
 
     return result.map(mergeRunSpecs).pop();
   }
 
   async deleteRunsByIds(runIds: string[]) {
     const result = await getMongoDB()
-      .collection('runs')
-      .deleteMany({
-        runId: {
-          $in: runIds,
-        },
-      });
+    .collection('runs')
+    .deleteMany({
+      runId: {
+        $in: runIds,
+      },
+    });
     return {
       success: result.result.ok === 1,
       message: `${result.deletedCount} document${
-        result.deletedCount > 1 ? 's' : ''
+      result.deletedCount > 1 ? 's' : ''
       } deleted`,
       runIds: result.result.ok === 1 ? runIds : [],
     };
@@ -174,14 +174,14 @@ export class RunsAPI extends DataSource {
       };
     }
     const response = (await getMongoDB()
-      .collection('runs')
-      .find({
-        createdAt: {
-          $lte: endDate.toISOString(),
-          $gte: startDate.toISOString(),
-        },
-      })
-      .toArray()) as Run[];
+    .collection('runs')
+    .find({
+      createdAt: {
+        $lte: endDate.toISOString(),
+        $gte: startDate.toISOString(),
+      },
+    })
+    .toArray()) as Run[];
     const runIds = response.map((x) => x.runId) as string[];
     return await this.deleteRunsByIds(runIds);
   }
