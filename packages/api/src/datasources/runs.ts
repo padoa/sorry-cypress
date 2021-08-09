@@ -103,7 +103,7 @@ export class RunsAPI extends DataSource {
         $limit: PAGE_LIMIT + 1,
       },
       projectAggregation,
-      //lookupAggregation,
+      lookupAggregation,
     ].filter(negate(isNil));
 
     const results = (await (
@@ -124,7 +124,7 @@ export class RunsAPI extends DataSource {
       ...filtersToAggregations(filters),
       getSortByAggregation(orderDirection),
       projectAggregation,
-      //lookupAggregation,
+      lookupAggregation,
     ].filter(negate(isNil));
 
     const results = (await getMongoDB()
