@@ -46,11 +46,6 @@ export const resolvers = {
       { cursor, filters }: Parameters<RunsAPI['getRunFeed']>[0],
       { dataSources }: { dataSources: AppDatasources }
     ) => dataSources.runsAPI.getRunFeed({ cursor: cursor || false, filters }),
-    lightRunFeed: (
-      _: any,
-      { cursor, filters }: Parameters<RunsAPI['getLightRunFeed']>[0],
-      { dataSources }: { dataSources: AppDatasources }
-    ) => dataSources.runsAPI.getLightRunFeed({ cursor: cursor || false, filters }),
     run: (
       _: any,
       { id }: { id: string },

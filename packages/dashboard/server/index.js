@@ -3,7 +3,7 @@ const { app } = require('./app');
 const { PORT } = require('./config');
 
 async function main() {
-  app.on('error', (error) => {
+  app.on('error', error => {
     throw error;
   });
   app.listen(PORT, () => {
@@ -11,7 +11,7 @@ async function main() {
   });
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error);
   process.exit(1);
 });
