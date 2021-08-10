@@ -1,0 +1,27 @@
+query getLightRunsFeed($cursor: String, $filters: [Filters]) {
+  lightRunFeed(cursor: $cursor, filters: $filters) {
+    cursor
+    hasMore
+    runs {
+      runId
+      createdAt
+      meta {
+        ciBuildId
+        projectId
+        commit {
+          sha
+          branch
+          remoteOrigin
+          message
+          authorEmail
+          authorName
+        }
+      }
+      specs {
+        spec
+        instanceId
+        claimed
+      }
+    }
+  }
+}
