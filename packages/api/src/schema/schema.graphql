@@ -11,6 +11,7 @@ type Query {
     filters: [Filters] = null
   ): [Run]!
   runFeed(cursor: String, filters: [Filters] = null): RunFeed!
+  fullRunFeed(cursor: String, filters: [Filters] = null): RunFeed!
   run(id: ID!): Run
   instance(id: ID!): Instance
   specStats(spec: String!, filters: [Filters] = null): SpecStats
@@ -113,6 +114,12 @@ type RunMeta {
 
 ### RunFeed - runs representation for the landing page
 type RunFeed {
+  cursor: String!
+  hasMore: Boolean!
+  runs: [Run!]!
+}
+
+type FullRunFeed {
   cursor: String!
   hasMore: Boolean!
   runs: [Run!]!

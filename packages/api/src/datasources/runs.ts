@@ -113,6 +113,38 @@ export class RunsAPI extends DataSource {
     return runFeedReducer(results);
   }
 
+  async getFullRunFeed({
+    cursor,
+    filters,
+  }: {
+    filters: AggregationFilter[];
+    cursor: string | false;
+  }) {
+    const aggregationPipeline = [
+      ...filtersToAggregations(filters),
+      getSortByAggregation(),
+      cursor
+        ? {
+            $match: {
+              _id: { $lt: new ObjectID(cursor) },
+            },
+          }
+        : null,
+      {
+        // get one extra to know if there's more
+        $limit: PAGE_LIMIT + 1,
+      },
+      projectAggregation,
+      lookupAggregation,
+    ].filter(negate(isNil));
+
+    const results = (await (
+      await getMongoDB().collection('runs').aggregate(aggregationPipeline)
+    ).toArray()) as RunWithFullSpecs[];
+
+    return runFeedReducer(results);
+  }
+
   async getAllRuns({
     orderDirection,
     filters,
