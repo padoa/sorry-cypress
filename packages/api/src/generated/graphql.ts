@@ -52,13 +52,6 @@ export type Filters = {
   like?: Maybe<Scalars['String']>;
 };
 
-export type FullRunFeed = {
-  __typename?: 'FullRunFeed';
-  cursor: Scalars['String'];
-  hasMore: Scalars['Boolean'];
-  runs: Array<Run>;
-};
-
 export type FullRunSpec = {
   __typename?: 'FullRunSpec';
   spec: Scalars['String'];
@@ -158,6 +151,13 @@ export type InstanceTestV5 = {
   attempts: Array<TestAttempt>;
 };
 
+export type LightRunFeed = {
+  __typename?: 'LightRunFeed';
+  cursor: Scalars['String'];
+  hasMore: Scalars['Boolean'];
+  runs: Array<Run>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   deleteRun: DeleteRunResponse;
@@ -229,7 +229,7 @@ export type Query = {
   project?: Maybe<Project>;
   runs: Array<Maybe<Run>>;
   runFeed: RunFeed;
-  fullRunFeed: RunFeed;
+  lightRunFeed: LightRunFeed;
   run?: Maybe<Run>;
   instance?: Maybe<Instance>;
   specStats?: Maybe<SpecStats>;
@@ -260,7 +260,7 @@ export type QueryRunFeedArgs = {
 };
 
 
-export type QueryFullRunFeedArgs = {
+export type QueryLightRunFeedArgs = {
   cursor?: Maybe<Scalars['String']>;
   filters?: Maybe<Array<Maybe<Filters>>>;
 };
@@ -439,7 +439,6 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   DeleteRunResponse: ResolverTypeWrapper<DeleteRunResponse>;
   Filters: Filters;
-  FullRunFeed: ResolverTypeWrapper<FullRunFeed>;
   FullRunSpec: ResolverTypeWrapper<FullRunSpec>;
   Hook: ResolverTypeWrapper<Hook>;
   HookInput: HookInput;
@@ -451,6 +450,7 @@ export type ResolversTypes = {
   InstanceTest: ResolverTypeWrapper<InstanceTest>;
   InstanceTestUnion: ResolversTypes['InstanceTest'] | ResolversTypes['InstanceTestV5'];
   InstanceTestV5: ResolverTypeWrapper<InstanceTestV5>;
+  LightRunFeed: ResolverTypeWrapper<LightRunFeed>;
   Mutation: ResolverTypeWrapper<{}>;
   OrderingOptions: OrderingOptions;
   PartialRun: ResolverTypeWrapper<PartialRun>;
@@ -478,7 +478,6 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   DeleteRunResponse: DeleteRunResponse;
   Filters: Filters;
-  FullRunFeed: FullRunFeed;
   FullRunSpec: FullRunSpec;
   Hook: Hook;
   HookInput: HookInput;
@@ -490,6 +489,7 @@ export type ResolversParentTypes = {
   InstanceTest: InstanceTest;
   InstanceTestUnion: ResolversParentTypes['InstanceTest'] | ResolversParentTypes['InstanceTestV5'];
   InstanceTestV5: InstanceTestV5;
+  LightRunFeed: LightRunFeed;
   Mutation: {};
   PartialRun: PartialRun;
   Project: Project;
@@ -536,13 +536,6 @@ export type DeleteRunResponseResolvers<ContextType = any, ParentType extends Res
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   runIds?: Resolver<Array<Maybe<ResolversTypes['ID']>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type FullRunFeedResolvers<ContextType = any, ParentType extends ResolversParentTypes['FullRunFeed'] = ResolversParentTypes['FullRunFeed']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  hasMore?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  runs?: Resolver<Array<ResolversTypes['Run']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -638,6 +631,13 @@ export type InstanceTestV5Resolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type LightRunFeedResolvers<ContextType = any, ParentType extends ResolversParentTypes['LightRunFeed'] = ResolversParentTypes['LightRunFeed']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  hasMore?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  runs?: Resolver<Array<ResolversTypes['Run']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   deleteRun?: Resolver<ResolversTypes['DeleteRunResponse'], ParentType, ContextType, RequireFields<MutationDeleteRunArgs, 'runId'>>;
   deleteRuns?: Resolver<ResolversTypes['DeleteRunResponse'], ParentType, ContextType, RequireFields<MutationDeleteRunsArgs, 'runIds'>>;
@@ -666,7 +666,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>;
   runs?: Resolver<Array<Maybe<ResolversTypes['Run']>>, ParentType, ContextType, RequireFields<QueryRunsArgs, 'orderDirection' | 'cursor' | 'filters'>>;
   runFeed?: Resolver<ResolversTypes['RunFeed'], ParentType, ContextType, RequireFields<QueryRunFeedArgs, 'filters'>>;
-  fullRunFeed?: Resolver<ResolversTypes['RunFeed'], ParentType, ContextType, RequireFields<QueryFullRunFeedArgs, 'filters'>>;
+  lightRunFeed?: Resolver<ResolversTypes['LightRunFeed'], ParentType, ContextType, RequireFields<QueryLightRunFeedArgs, 'filters'>>;
   run?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<QueryRunArgs, 'id'>>;
   instance?: Resolver<Maybe<ResolversTypes['Instance']>, ParentType, ContextType, RequireFields<QueryInstanceArgs, 'id'>>;
   specStats?: Resolver<Maybe<ResolversTypes['SpecStats']>, ParentType, ContextType, RequireFields<QuerySpecStatsArgs, 'spec' | 'filters'>>;
@@ -744,7 +744,6 @@ export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   DeleteProjectResponse?: DeleteProjectResponseResolvers<ContextType>;
   DeleteRunResponse?: DeleteRunResponseResolvers<ContextType>;
-  FullRunFeed?: FullRunFeedResolvers<ContextType>;
   FullRunSpec?: FullRunSpecResolvers<ContextType>;
   Hook?: HookResolvers<ContextType>;
   Instance?: InstanceResolvers<ContextType>;
@@ -754,6 +753,7 @@ export type Resolvers<ContextType = any> = {
   InstanceTest?: InstanceTestResolvers<ContextType>;
   InstanceTestUnion?: InstanceTestUnionResolvers<ContextType>;
   InstanceTestV5?: InstanceTestV5Resolvers<ContextType>;
+  LightRunFeed?: LightRunFeedResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PartialRun?: PartialRunResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;

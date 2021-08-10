@@ -67,9 +67,8 @@ const DeleteButton = ({
       },
     ],
   });
-  const [startDeleteRun, deleting, deleteResult, deleteError] = useAsync(
-    deleteRunMutation
-  );
+  const [startDeleteRun, deleting, deleteResult, deleteError] =
+    useAsync(deleteRunMutation);
   const [shouldShowModal, setShowModal] = useState(false);
 
   function deleteRun() {
@@ -152,7 +151,9 @@ export function RunSummary({ run }: RunSummaryProps) {
   return (
     <Paper>
       <FlexRow>
-        <HeaderLink to={`/run/${runId}`}><b>{meta?.commit.branch}:</b> {meta?.commit.message}</HeaderLink>
+        <HeaderLink to={`/run/${runId}`}>
+          <b>{meta?.commit.branch}:</b> {meta?.commit.message}
+        </HeaderLink>
         <DeleteButton runId={runId} ciBuildId={meta?.ciBuildId || ''} />
       </FlexRow>
       <Grid>

@@ -1,6 +1,6 @@
 import { CenteredContent } from '@src/components/common';
 import { RunSummary } from '@src/components/run/summary';
-import { useGetRunsFeedQuery } from '@src/generated/graphql';
+import { useGetLightRunsFeedQuery } from '@src/generated/graphql';
 import { Button } from 'bold-ui';
 import React, { FC } from 'react';
 
@@ -28,7 +28,7 @@ const RunList: FC<RunListProps> = ({
     },
     ...searchFilters,
   ];
-  const { fetchMore, loading, error, data } = useGetRunsFeedQuery({
+  const { fetchMore, loading, error, data } = useGetLightRunsFeedQuery({
     variables: {
       filters,
       cursor: '',
@@ -46,8 +46,8 @@ const RunList: FC<RunListProps> = ({
     );
   }
 
-  const { runFeed } = data;
-  const { runs, cursor } = runFeed;
+  const { lightRunFeed } = data;
+  const { runs, cursor } = lightRunFeed;
   const loadMore = () => {
     return fetchMore({
       variables: {
@@ -56,11 +56,11 @@ const RunList: FC<RunListProps> = ({
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         return {
-          runFeed: {
-            __typename: prev.runFeed.__typename,
-            hasMore: fetchMoreResult?.runFeed.hasMore,
-            cursor: fetchMoreResult?.runFeed.cursor,
-            runs: [...prev.runFeed.runs, ...fetchMoreResult?.runFeed.runs],
+          lightRunFeed: {
+            __typename: prev.lightRunFeed.__typename,
+            hasMore: fetchMoreResult?.lightRunFeed.hasMore,
+            cursor: fetchMoreResult?.lightRunFeed.cursor,
+            runs: [...prev.lightRunFeed.runs, ...fetchMoreResult?.lightRunFeed.runs],
           },
         };
       },
@@ -88,7 +88,7 @@ const RunList: FC<RunListProps> = ({
       {runs.map((run) => (
         <RunSummary run={run} key={run.runId} />
       ))}
-      {runFeed.hasMore && <Button onClick={loadMore}>Load More</Button>}
+      {lightRunFeed.hasMore && <Button onClick={loadMore}>Load More</Button>}
     </>
   );
 };
