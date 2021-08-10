@@ -67,8 +67,9 @@ const DeleteButton = ({
       },
     ],
   });
-  const [startDeleteRun, deleting, deleteResult, deleteError] =
-    useAsync(deleteRunMutation);
+  const [startDeleteRun, deleting, deleteResult, deleteError] = useAsync(
+    deleteRunMutation
+  );
   const [shouldShowModal, setShowModal] = useState(false);
 
   function deleteRun() {
@@ -151,9 +152,7 @@ export function RunSummary({ run }: RunSummaryProps) {
   return (
     <Paper>
       <FlexRow>
-        <HeaderLink to={`/run/${runId}`}>
-          <b>{meta?.commit.branch}:</b> {meta?.commit.message}
-        </HeaderLink>
+        <HeaderLink to={`/run/${runId}`}><b>{meta?.commit.branch}:</b> {meta?.commit.message}</HeaderLink>
         <DeleteButton runId={runId} ciBuildId={meta?.ciBuildId || ''} />
       </FlexRow>
       <Grid>
@@ -190,18 +189,15 @@ export function RunSummary({ run }: RunSummaryProps) {
             </Text>
           </div>
           <div style={{ display: 'flex' }}>
-            {overall.tests > 0 && 
-              <Text style={{ marginRight: '10px' }}>
-                <Tooltip text="Total Tests">
-                  <span className={centeredIconClassName}>
-                    <Icon icon="fileWithItensOutline" size={1} />
-                    {overall.tests}
-                  </span>
-                </Tooltip>
-              </Text>
-            }
-            {overall.passes > 0 && 
-              <Text color="success" style={{ marginRight: '10px' }}>
+            <Text style={{ marginRight: '10px' }}>
+              <Tooltip text="Total Tests">
+                <span className={centeredIconClassName}>
+                  <Icon icon="fileWithItensOutline" size={1} />
+                  {overall.tests}
+                </span>
+              </Tooltip>
+            </Text>
+            <Text color="success" style={{ marginRight: '10px' }}>
               <Tooltip text="Successful">
                 <span className={centeredIconClassName}>
                   <Icon icon="checkCircleOutline" size={1} />
@@ -209,33 +205,28 @@ export function RunSummary({ run }: RunSummaryProps) {
                 </span>
               </Tooltip>
             </Text>
-            }
-            {overall.failures > 0 && 
-              <Text
-                color={overall.failures ? 'danger' : 'normal'}
-                style={{ marginRight: '10px' }}
-              >
-                <Tooltip text="Failed">
-                  <span className={centeredIconClassName}>
-                    <Icon icon="exclamationTriangleOutline" size={1} />
-                    {overall.failures}
-                  </span>
-                </Tooltip>
-              </Text>
-            }
-            {overall.pending > 0 && 
-              <Text
-                color={overall.pending ? 'disabled' : 'normal'}
-                style={{ marginRight: '10px' }}
-              >
-                <Tooltip text="Skipped Tests">
-                  <span className={centeredIconClassName}>
-                    <Icon icon="timesOutline" size={1} />
-                    {overall.pending}
-                  </span>
-                </Tooltip>
-              </Text>
-            }
+            <Text
+              color={overall.failures ? 'danger' : 'normal'}
+              style={{ marginRight: '10px' }}
+            >
+              <Tooltip text="Failed">
+                <span className={centeredIconClassName}>
+                  <Icon icon="exclamationTriangleOutline" size={1} />
+                  {overall.failures}
+                </span>
+              </Tooltip>
+            </Text>
+            <Text
+              color={overall.pending ? 'disabled' : 'normal'}
+              style={{ marginRight: '10px' }}
+            >
+              <Tooltip text="Skipped Tests">
+                <span className={centeredIconClassName}>
+                  <Icon icon="timesOutline" size={1} />
+                  {overall.pending}
+                </span>
+              </Tooltip>
+            </Text>
           </div>
 
           <div style={{ marginTop: theme.sizes.text }}>

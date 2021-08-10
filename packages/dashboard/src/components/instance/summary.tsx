@@ -26,11 +26,9 @@ export function InstanceSummary({ instance }: InstanceSummaryProps) {
             <Heading level={1}>{instance.spec}</Heading>
           </HFlow>
           <ul>
-            {(
-              ['suites', 'tests', 'passes', 'failures', 'pending'] as Array<
-                keyof InstanceStats
-              >
-            ).map((i) => (
+            {(['suites', 'tests', 'passes', 'failures', 'pending'] as Array<
+              keyof InstanceStats
+            >).map((i) => (
               <li key={i}>
                 <Text
                   color={
