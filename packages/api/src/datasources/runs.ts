@@ -44,6 +44,12 @@ const runFeedReducer = (runs: RunWithFullSpecs[]) => ({
   hasMore: runs.length > PAGE_LIMIT,
 });
 
+const LightRunFeedReducer = (runs: RunWithFullSpecs[]) => ({
+  runs: runs.slice(0, PAGE_LIMIT).map(mergeRunSpecs),
+  cursor: getCursor(runs),
+  hasMore: runs.length > PAGE_LIMIT,
+});
+
 const matchRunAggregation = (runId: string) => ({
   $match: {
     runId,
@@ -111,6 +117,37 @@ export class RunsAPI extends DataSource {
     ).toArray()) as RunWithFullSpecs[];
 
     return runFeedReducer(results);
+  }
+
+  async getLightRunFeed({
+    cursor,
+    filters,
+  }: {
+    filters: AggregationFilter[];
+    cursor: string | false;
+  }) {
+    const aggregationPipeline = [
+      ...filtersToAggregations(filters),
+      getSortByAggregation(),
+      cursor
+        ? {
+            $match: {
+              _id: { $lt: new ObjectID(cursor) },
+            },
+          }
+        : null,
+      {
+        // get one extra to know if there's more
+        $limit: PAGE_LIMIT + 1,
+      },
+      projectAggregation,
+    ].filter(negate(isNil));
+
+    const results = (await (
+      await getMongoDB().collection('runs').aggregate(aggregationPipeline)
+    ).toArray()) as RunWithFullSpecs[];
+
+    return LightRunFeedReducer(results);
   }
 
   async getAllRuns({

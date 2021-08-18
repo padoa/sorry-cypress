@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -12,55 +13,147 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  projects: Array<Project>;
-  project?: Maybe<Project>;
-  runs: Array<Maybe<Run>>;
-  runFeed: RunFeed;
-  run?: Maybe<Run>;
-  instance?: Maybe<Instance>;
-  specStats?: Maybe<SpecStats>;
+export type Commit = {
+  __typename?: 'Commit';
+  sha?: Maybe<Scalars['String']>;
+  branch?: Maybe<Scalars['String']>;
+  authorName?: Maybe<Scalars['String']>;
+  authorEmail?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  remoteOrigin?: Maybe<Scalars['String']>;
+};
+
+export type CypressConfig = {
+  __typename?: 'CypressConfig';
+  video: Scalars['Boolean'];
+  videoUploadOnPasses: Scalars['Boolean'];
 };
 
 
-export type QueryProjectsArgs = {
-  orderDirection?: Maybe<OrderingOptions>;
-  filters?: Maybe<Array<Maybe<Filters>>>;
+export type DeleteProjectResponse = {
+  __typename?: 'DeleteProjectResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  projectIds: Array<Maybe<Scalars['ID']>>;
 };
 
-
-export type QueryProjectArgs = {
-  id: Scalars['ID'];
+export type DeleteRunResponse = {
+  __typename?: 'DeleteRunResponse';
+  success: Scalars['Boolean'];
+  message: Scalars['String'];
+  runIds: Array<Maybe<Scalars['ID']>>;
 };
 
-
-export type QueryRunsArgs = {
-  orderDirection?: Maybe<OrderingOptions>;
-  cursor?: Maybe<Scalars['String']>;
-  filters?: Maybe<Array<Maybe<Filters>>>;
+export type Filters = {
+  key?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+  like?: Maybe<Scalars['String']>;
 };
 
-
-export type QueryRunFeedArgs = {
-  cursor?: Maybe<Scalars['String']>;
-  filters?: Maybe<Array<Maybe<Filters>>>;
-};
-
-
-export type QueryRunArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryInstanceArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QuerySpecStatsArgs = {
+export type FullRunSpec = {
+  __typename?: 'FullRunSpec';
   spec: Scalars['String'];
-  filters?: Maybe<Array<Maybe<Filters>>>;
+  instanceId: Scalars['String'];
+  claimed: Scalars['Boolean'];
+  claimedAt?: Maybe<Scalars['String']>;
+  machineId?: Maybe<Scalars['String']>;
+  groupId?: Maybe<Scalars['String']>;
+  results?: Maybe<InstanceResults>;
+};
+
+export type Hook = {
+  __typename?: 'Hook';
+  hookId?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  headers?: Maybe<Scalars['String']>;
+  hookEvents?: Maybe<Array<Maybe<Scalars['String']>>>;
+  hookType?: Maybe<Scalars['String']>;
+  githubToken?: Maybe<Scalars['String']>;
+};
+
+export type HookInput = {
+  hookId?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  headers?: Maybe<Scalars['String']>;
+  hookEvents?: Maybe<Array<Maybe<Scalars['String']>>>;
+  hookType?: Maybe<Scalars['String']>;
+  githubToken?: Maybe<Scalars['String']>;
+};
+
+export type Instance = {
+  __typename?: 'Instance';
+  runId: Scalars['ID'];
+  run: PartialRun;
+  spec: Scalars['String'];
+  instanceId: Scalars['ID'];
+  results?: Maybe<InstanceResults>;
+};
+
+export type InstanceResults = {
+  __typename?: 'InstanceResults';
+  stats: InstanceStats;
+  tests?: Maybe<Array<Maybe<InstanceTestUnion>>>;
+  error?: Maybe<Scalars['String']>;
+  stdout?: Maybe<Scalars['String']>;
+  screenshots: Array<InstanceScreeshot>;
+  cypressConfig?: Maybe<CypressConfig>;
+  reporterStats?: Maybe<ReporterStats>;
+  videoUrl?: Maybe<Scalars['String']>;
+};
+
+export type InstanceScreeshot = {
+  __typename?: 'InstanceScreeshot';
+  screenshotId: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  testId: Scalars['String'];
+  takenAt: Scalars['String'];
+  height: Scalars['Int'];
+  width: Scalars['Int'];
+  screenshotURL?: Maybe<Scalars['String']>;
+};
+
+export type InstanceStats = {
+  __typename?: 'InstanceStats';
+  suites?: Maybe<Scalars['Int']>;
+  tests?: Maybe<Scalars['Int']>;
+  passes?: Maybe<Scalars['Int']>;
+  pending?: Maybe<Scalars['Int']>;
+  skipped?: Maybe<Scalars['Int']>;
+  failures?: Maybe<Scalars['Int']>;
+  wallClockStartedAt?: Maybe<Scalars['String']>;
+  wallClockEndedAt?: Maybe<Scalars['String']>;
+  wallClockDuration?: Maybe<Scalars['Int']>;
+};
+
+export type InstanceTest = {
+  __typename?: 'InstanceTest';
+  testId: Scalars['String'];
+  title?: Maybe<Array<Maybe<Scalars['String']>>>;
+  state?: Maybe<Scalars['String']>;
+  body?: Maybe<Scalars['String']>;
+  stack?: Maybe<Scalars['String']>;
+  error?: Maybe<Scalars['String']>;
+  wallClockStartedAt?: Maybe<Scalars['String']>;
+  wallClockDuration?: Maybe<Scalars['Int']>;
+};
+
+export type InstanceTestUnion = InstanceTest | InstanceTestV5;
+
+export type InstanceTestV5 = {
+  __typename?: 'InstanceTestV5';
+  testId: Scalars['String'];
+  title?: Maybe<Array<Maybe<Scalars['String']>>>;
+  state?: Maybe<Scalars['String']>;
+  body?: Maybe<Scalars['String']>;
+  displayError?: Maybe<Scalars['String']>;
+  attempts: Array<TestAttempt>;
+};
+
+export type LightRunFeed = {
+  __typename?: 'LightRunFeed';
+  cursor: Scalars['String'];
+  hasMore: Scalars['Boolean'];
+  runs: Array<Run>;
 };
 
 export type Mutation = {
@@ -104,108 +197,10 @@ export type MutationUpdateProjectArgs = {
   project?: Maybe<ProjectInput>;
 };
 
-export type DeleteRunResponse = {
-  __typename?: 'DeleteRunResponse';
-  success: Scalars['Boolean'];
-  message: Scalars['String'];
-  runIds: Array<Maybe<Scalars['ID']>>;
-};
-
-export type SpecStats = {
-  __typename?: 'SpecStats';
-  spec: Scalars['String'];
-  avgWallClockDuration: Scalars['Int'];
-  count: Scalars['Int'];
-};
-
-export type Hook = {
-  __typename?: 'Hook';
-  hookId?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  headers?: Maybe<Scalars['String']>;
-  hookEvents?: Maybe<Array<Maybe<Scalars['String']>>>;
-  hookType?: Maybe<Scalars['String']>;
-  githubToken?: Maybe<Scalars['String']>;
-};
-
-export type Project = {
-  __typename?: 'Project';
-  projectId: Scalars['String'];
-  hooks?: Maybe<Array<Maybe<Hook>>>;
-};
-
-export type HookInput = {
-  hookId?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  headers?: Maybe<Scalars['String']>;
-  hookEvents?: Maybe<Array<Maybe<Scalars['String']>>>;
-  hookType?: Maybe<Scalars['String']>;
-  githubToken?: Maybe<Scalars['String']>;
-};
-
-export type ProjectInput = {
-  projectId: Scalars['String'];
-  hooks?: Maybe<Array<Maybe<HookInput>>>;
-};
-
-export type DeleteProjectResponse = {
-  __typename?: 'DeleteProjectResponse';
-  success: Scalars['Boolean'];
-  message: Scalars['String'];
-  projectIds: Array<Maybe<Scalars['ID']>>;
-};
-
-export type Run = {
-  __typename?: 'Run';
-  runId: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  meta?: Maybe<RunMeta>;
-  specs: Array<FullRunSpec>;
-};
-
-export type FullRunSpec = {
-  __typename?: 'FullRunSpec';
-  spec: Scalars['String'];
-  instanceId: Scalars['String'];
-  claimed: Scalars['Boolean'];
-  claimedAt?: Maybe<Scalars['String']>;
-  machineId?: Maybe<Scalars['String']>;
-  groupId?: Maybe<Scalars['String']>;
-  results?: Maybe<InstanceResults>;
-};
-
-export type Commit = {
-  __typename?: 'Commit';
-  sha?: Maybe<Scalars['String']>;
-  branch?: Maybe<Scalars['String']>;
-  authorName?: Maybe<Scalars['String']>;
-  authorEmail?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  remoteOrigin?: Maybe<Scalars['String']>;
-};
-
-export type RunMeta = {
-  __typename?: 'RunMeta';
-  ciBuildId?: Maybe<Scalars['String']>;
-  projectId?: Maybe<Scalars['String']>;
-  commit?: Maybe<Commit>;
-};
-
-export type RunFeed = {
-  __typename?: 'RunFeed';
-  cursor: Scalars['String'];
-  hasMore: Scalars['Boolean'];
-  runs: Array<Run>;
-};
-
-export type Instance = {
-  __typename?: 'Instance';
-  runId: Scalars['ID'];
-  run: PartialRun;
-  spec: Scalars['String'];
-  instanceId: Scalars['ID'];
-  results?: Maybe<InstanceResults>;
-};
+export enum OrderingOptions {
+  Desc = 'DESC',
+  Asc = 'ASC'
+}
 
 export type PartialRun = {
   __typename?: 'PartialRun';
@@ -215,56 +210,73 @@ export type PartialRun = {
   specs: Array<Maybe<RunSpec>>;
 };
 
-export type RunSpec = {
-  __typename?: 'RunSpec';
+export type Project = {
+  __typename?: 'Project';
+  projectId: Scalars['String'];
+  hooks?: Maybe<Array<Maybe<Hook>>>;
+};
+
+export type ProjectInput = {
+  projectId: Scalars['String'];
+  hooks?: Maybe<Array<Maybe<HookInput>>>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  projects: Array<Project>;
+  project?: Maybe<Project>;
+  runs: Array<Maybe<Run>>;
+  runFeed: RunFeed;
+  lightRunFeed: LightRunFeed;
+  run?: Maybe<Run>;
+  instance?: Maybe<Instance>;
+  specStats?: Maybe<SpecStats>;
+};
+
+
+export type QueryProjectsArgs = {
+  orderDirection?: Maybe<OrderingOptions>;
+  filters?: Maybe<Array<Maybe<Filters>>>;
+};
+
+
+export type QueryProjectArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryRunsArgs = {
+  orderDirection?: Maybe<OrderingOptions>;
+  cursor?: Maybe<Scalars['String']>;
+  filters?: Maybe<Array<Maybe<Filters>>>;
+};
+
+
+export type QueryRunFeedArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  filters?: Maybe<Array<Maybe<Filters>>>;
+};
+
+
+export type QueryLightRunFeedArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  filters?: Maybe<Array<Maybe<Filters>>>;
+};
+
+
+export type QueryRunArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryInstanceArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QuerySpecStatsArgs = {
   spec: Scalars['String'];
-  instanceId: Scalars['String'];
-  claimed: Scalars['Boolean'];
-  claimedAt?: Maybe<Scalars['String']>;
-  groupId?: Maybe<Scalars['String']>;
-  machineId?: Maybe<Scalars['String']>;
-};
-
-export type InstanceResults = {
-  __typename?: 'InstanceResults';
-  stats: InstanceStats;
-  tests?: Maybe<Array<Maybe<InstanceTestUnion>>>;
-  error?: Maybe<Scalars['String']>;
-  stdout?: Maybe<Scalars['String']>;
-  screenshots: Array<InstanceScreeshot>;
-  cypressConfig?: Maybe<CypressConfig>;
-  reporterStats?: Maybe<ReporterStats>;
-  videoUrl?: Maybe<Scalars['String']>;
-};
-
-export type InstanceStats = {
-  __typename?: 'InstanceStats';
-  suites?: Maybe<Scalars['Int']>;
-  tests?: Maybe<Scalars['Int']>;
-  passes?: Maybe<Scalars['Int']>;
-  pending?: Maybe<Scalars['Int']>;
-  skipped?: Maybe<Scalars['Int']>;
-  failures?: Maybe<Scalars['Int']>;
-  wallClockStartedAt?: Maybe<Scalars['String']>;
-  wallClockEndedAt?: Maybe<Scalars['String']>;
-  wallClockDuration?: Maybe<Scalars['Int']>;
-};
-
-export type CypressConfig = {
-  __typename?: 'CypressConfig';
-  video: Scalars['Boolean'];
-  videoUploadOnPasses: Scalars['Boolean'];
-};
-
-export type InstanceScreeshot = {
-  __typename?: 'InstanceScreeshot';
-  screenshotId: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-  testId: Scalars['String'];
-  takenAt: Scalars['String'];
-  height: Scalars['Int'];
-  width: Scalars['Int'];
-  screenshotURL?: Maybe<Scalars['String']>;
+  filters?: Maybe<Array<Maybe<Filters>>>;
 };
 
 export type ReporterStats = {
@@ -279,35 +291,43 @@ export type ReporterStats = {
   duration?: Maybe<Scalars['Int']>;
 };
 
-export type InstanceTestUnion = InstanceTest | InstanceTestV5;
-
-export type InstanceTest = {
-  __typename?: 'InstanceTest';
-  testId: Scalars['String'];
-  title?: Maybe<Array<Maybe<Scalars['String']>>>;
-  state?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
-  stack?: Maybe<Scalars['String']>;
-  error?: Maybe<Scalars['String']>;
-  wallClockStartedAt?: Maybe<Scalars['String']>;
-  wallClockDuration?: Maybe<Scalars['Int']>;
+export type Run = {
+  __typename?: 'Run';
+  runId: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  meta?: Maybe<RunMeta>;
+  specs: Array<FullRunSpec>;
 };
 
-export type InstanceTestV5 = {
-  __typename?: 'InstanceTestV5';
-  testId: Scalars['String'];
-  title?: Maybe<Array<Maybe<Scalars['String']>>>;
-  state?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
-  displayError?: Maybe<Scalars['String']>;
-  attempts: Array<TestAttempt>;
+export type RunFeed = {
+  __typename?: 'RunFeed';
+  cursor: Scalars['String'];
+  hasMore: Scalars['Boolean'];
+  runs: Array<Run>;
 };
 
-export type TestError = {
-  __typename?: 'TestError';
-  name: Scalars['String'];
-  message: Scalars['String'];
-  stack: Scalars['String'];
+export type RunMeta = {
+  __typename?: 'RunMeta';
+  ciBuildId?: Maybe<Scalars['String']>;
+  projectId?: Maybe<Scalars['String']>;
+  commit?: Maybe<Commit>;
+};
+
+export type RunSpec = {
+  __typename?: 'RunSpec';
+  spec: Scalars['String'];
+  instanceId: Scalars['String'];
+  claimed: Scalars['Boolean'];
+  claimedAt?: Maybe<Scalars['String']>;
+  groupId?: Maybe<Scalars['String']>;
+  machineId?: Maybe<Scalars['String']>;
+};
+
+export type SpecStats = {
+  __typename?: 'SpecStats';
+  spec: Scalars['String'];
+  avgWallClockDuration: Scalars['Int'];
+  count: Scalars['Int'];
 };
 
 export type TestAttempt = {
@@ -318,16 +338,11 @@ export type TestAttempt = {
   wallClockDuration?: Maybe<Scalars['Int']>;
 };
 
-
-export enum OrderingOptions {
-  Desc = 'DESC',
-  Asc = 'ASC'
-}
-
-export type Filters = {
-  key?: Maybe<Scalars['String']>;
-  value?: Maybe<Scalars['String']>;
-  like?: Maybe<Scalars['String']>;
+export type TestError = {
+  __typename?: 'TestError';
+  name: Scalars['String'];
+  message: Scalars['String'];
+  stack: Scalars['String'];
 };
 
 export type CreateProjectMutationVariables = Exact<{
@@ -339,10 +354,10 @@ export type CreateProjectMutation = (
   { __typename?: 'Mutation' }
   & { createProject: (
     { __typename?: 'Project' }
-    & Pick<Project, 'projectId'>
+    & Pick<Project, '[object Object]'>
     & { hooks?: Maybe<Array<Maybe<(
       { __typename?: 'Hook' }
-      & Pick<Hook, 'hookId' | 'url' | 'headers' | 'hookEvents' | 'hookType'>
+      & Pick<Hook, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
     )>>> }
   ) }
 );
@@ -356,7 +371,7 @@ export type DeleteProjectMutation = (
   { __typename?: 'Mutation' }
   & { deleteProject: (
     { __typename?: 'DeleteProjectResponse' }
-    & Pick<DeleteProjectResponse, 'success' | 'message' | 'projectIds'>
+    & Pick<DeleteProjectResponse, '[object Object]' | '[object Object]' | '[object Object]'>
   ) }
 );
 
@@ -369,7 +384,7 @@ export type DeleteRunMutation = (
   { __typename?: 'Mutation' }
   & { deleteRun: (
     { __typename?: 'DeleteRunResponse' }
-    & Pick<DeleteRunResponse, 'success' | 'message' | 'runIds'>
+    & Pick<DeleteRunResponse, '[object Object]' | '[object Object]' | '[object Object]'>
   ) }
 );
 
@@ -382,46 +397,75 @@ export type GetInstanceQuery = (
   { __typename?: 'Query' }
   & { instance?: Maybe<(
     { __typename?: 'Instance' }
-    & Pick<Instance, 'instanceId' | 'runId' | 'spec'>
+    & Pick<Instance, '[object Object]' | '[object Object]' | '[object Object]'>
     & { run: (
       { __typename?: 'PartialRun' }
       & { meta?: Maybe<(
         { __typename?: 'RunMeta' }
-        & Pick<RunMeta, 'ciBuildId' | 'projectId'>
+        & Pick<RunMeta, '[object Object]' | '[object Object]'>
         & { commit?: Maybe<(
           { __typename?: 'Commit' }
-          & Pick<Commit, 'sha' | 'branch' | 'authorName' | 'authorEmail' | 'remoteOrigin' | 'message'>
+          & Pick<Commit, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
         )> }
       )> }
     ), results?: Maybe<(
       { __typename?: 'InstanceResults' }
-      & Pick<InstanceResults, 'videoUrl'>
+      & Pick<InstanceResults, '[object Object]'>
       & { stats: (
         { __typename?: 'InstanceStats' }
-        & Pick<InstanceStats, 'suites' | 'tests' | 'passes' | 'pending' | 'skipped' | 'failures' | 'wallClockDuration' | 'wallClockStartedAt' | 'wallClockEndedAt'>
+        & Pick<InstanceStats, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       ), tests?: Maybe<Array<Maybe<(
         { __typename?: 'InstanceTest' }
-        & Pick<InstanceTest, 'testId' | 'title' | 'state' | 'wallClockDuration' | 'wallClockStartedAt' | 'error' | 'stack'>
+        & Pick<InstanceTest, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       ) | (
         { __typename?: 'InstanceTestV5' }
-        & Pick<InstanceTestV5, 'testId' | 'title' | 'state' | 'displayError'>
+        & Pick<InstanceTestV5, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
         & { attempts: Array<(
           { __typename?: 'TestAttempt' }
-          & Pick<TestAttempt, 'state' | 'wallClockDuration' | 'wallClockStartedAt'>
+          & Pick<TestAttempt, '[object Object]' | '[object Object]' | '[object Object]'>
           & { error?: Maybe<(
             { __typename?: 'TestError' }
-            & Pick<TestError, 'name' | 'message' | 'stack'>
+            & Pick<TestError, '[object Object]' | '[object Object]' | '[object Object]'>
           )> }
         )> }
       )>>>, screenshots: Array<(
         { __typename?: 'InstanceScreeshot' }
-        & Pick<InstanceScreeshot, 'testId' | 'screenshotId' | 'height' | 'width' | 'screenshotURL'>
+        & Pick<InstanceScreeshot, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )>, cypressConfig?: Maybe<(
         { __typename?: 'CypressConfig' }
-        & Pick<CypressConfig, 'video' | 'videoUploadOnPasses'>
+        & Pick<CypressConfig, '[object Object]' | '[object Object]'>
       )> }
     )> }
   )> }
+);
+
+export type GetLightRunsFeedQueryVariables = Exact<{
+  cursor?: Maybe<Scalars['String']>;
+  filters?: Maybe<Array<Maybe<Filters>>>;
+}>;
+
+
+export type GetLightRunsFeedQuery = (
+  { __typename?: 'Query' }
+  & { lightRunFeed: (
+    { __typename?: 'LightRunFeed' }
+    & Pick<LightRunFeed, '[object Object]' | '[object Object]'>
+    & { runs: Array<(
+      { __typename?: 'Run' }
+      & Pick<Run, '[object Object]' | '[object Object]'>
+      & { meta?: Maybe<(
+        { __typename?: 'RunMeta' }
+        & Pick<RunMeta, '[object Object]' | '[object Object]'>
+        & { commit?: Maybe<(
+          { __typename?: 'Commit' }
+          & Pick<Commit, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
+        )> }
+      )>, specs: Array<(
+        { __typename?: 'FullRunSpec' }
+        & Pick<FullRunSpec, '[object Object]' | '[object Object]' | '[object Object]'>
+      )> }
+    )> }
+  ) }
 );
 
 export type GetProjectQueryVariables = Exact<{
@@ -433,10 +477,10 @@ export type GetProjectQuery = (
   { __typename?: 'Query' }
   & { project?: Maybe<(
     { __typename?: 'Project' }
-    & Pick<Project, 'projectId'>
+    & Pick<Project, '[object Object]'>
     & { hooks?: Maybe<Array<Maybe<(
       { __typename?: 'Hook' }
-      & Pick<Hook, 'hookId' | 'url' | 'headers' | 'hookEvents' | 'hookType'>
+      & Pick<Hook, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
     )>>> }
   )> }
 );
@@ -451,7 +495,7 @@ export type GetProjectsQuery = (
   { __typename?: 'Query' }
   & { projects: Array<(
     { __typename?: 'Project' }
-    & Pick<Project, 'projectId'>
+    & Pick<Project, '[object Object]'>
   )> }
 );
 
@@ -464,40 +508,40 @@ export type GetRunQuery = (
   { __typename?: 'Query' }
   & { run?: Maybe<(
     { __typename?: 'Run' }
-    & Pick<Run, 'runId' | 'createdAt'>
+    & Pick<Run, '[object Object]' | '[object Object]'>
     & { meta?: Maybe<(
       { __typename?: 'RunMeta' }
-      & Pick<RunMeta, 'ciBuildId' | 'projectId'>
+      & Pick<RunMeta, '[object Object]' | '[object Object]'>
       & { commit?: Maybe<(
         { __typename?: 'Commit' }
-        & Pick<Commit, 'sha' | 'branch' | 'remoteOrigin' | 'message' | 'authorEmail' | 'authorName'>
+        & Pick<Commit, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       )> }
     )>, specs: Array<(
       { __typename?: 'FullRunSpec' }
-      & Pick<FullRunSpec, 'spec' | 'instanceId' | 'claimed' | 'claimedAt' | 'machineId' | 'groupId'>
+      & Pick<FullRunSpec, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
       & { results?: Maybe<(
         { __typename?: 'InstanceResults' }
-        & Pick<InstanceResults, 'videoUrl'>
+        & Pick<InstanceResults, '[object Object]'>
         & { cypressConfig?: Maybe<(
           { __typename?: 'CypressConfig' }
-          & Pick<CypressConfig, 'video' | 'videoUploadOnPasses'>
+          & Pick<CypressConfig, '[object Object]' | '[object Object]'>
         )>, tests?: Maybe<Array<Maybe<(
           { __typename?: 'InstanceTest' }
-          & Pick<InstanceTest, 'title' | 'state' | 'wallClockDuration' | 'wallClockStartedAt'>
+          & Pick<InstanceTest, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
         ) | (
           { __typename?: 'InstanceTestV5' }
-          & Pick<InstanceTestV5, 'title' | 'state'>
+          & Pick<InstanceTestV5, '[object Object]' | '[object Object]'>
           & { attempts: Array<(
             { __typename?: 'TestAttempt' }
-            & Pick<TestAttempt, 'state' | 'wallClockDuration' | 'wallClockStartedAt'>
+            & Pick<TestAttempt, '[object Object]' | '[object Object]' | '[object Object]'>
             & { error?: Maybe<(
               { __typename?: 'TestError' }
-              & Pick<TestError, 'name' | 'message' | 'stack'>
+              & Pick<TestError, '[object Object]' | '[object Object]' | '[object Object]'>
             )> }
           )> }
         )>>>, stats: (
           { __typename?: 'InstanceStats' }
-          & Pick<InstanceStats, 'tests' | 'pending' | 'passes' | 'failures' | 'skipped' | 'suites' | 'wallClockDuration' | 'wallClockStartedAt' | 'wallClockEndedAt'>
+          & Pick<InstanceStats, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
         ) }
       )> }
     )> }
@@ -514,35 +558,35 @@ export type GetRunsFeedQuery = (
   { __typename?: 'Query' }
   & { runFeed: (
     { __typename?: 'RunFeed' }
-    & Pick<RunFeed, 'cursor' | 'hasMore'>
+    & Pick<RunFeed, '[object Object]' | '[object Object]'>
     & { runs: Array<(
       { __typename?: 'Run' }
-      & Pick<Run, 'runId' | 'createdAt'>
+      & Pick<Run, '[object Object]' | '[object Object]'>
       & { meta?: Maybe<(
         { __typename?: 'RunMeta' }
-        & Pick<RunMeta, 'ciBuildId' | 'projectId'>
+        & Pick<RunMeta, '[object Object]' | '[object Object]'>
         & { commit?: Maybe<(
           { __typename?: 'Commit' }
-          & Pick<Commit, 'sha' | 'branch' | 'remoteOrigin' | 'message' | 'authorEmail' | 'authorName'>
+          & Pick<Commit, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
         )> }
       )>, specs: Array<(
         { __typename?: 'FullRunSpec' }
-        & Pick<FullRunSpec, 'spec' | 'instanceId' | 'claimed'>
+        & Pick<FullRunSpec, '[object Object]' | '[object Object]' | '[object Object]'>
         & { results?: Maybe<(
           { __typename?: 'InstanceResults' }
-          & Pick<InstanceResults, 'videoUrl'>
+          & Pick<InstanceResults, '[object Object]'>
           & { cypressConfig?: Maybe<(
             { __typename?: 'CypressConfig' }
-            & Pick<CypressConfig, 'video' | 'videoUploadOnPasses'>
+            & Pick<CypressConfig, '[object Object]' | '[object Object]'>
           )>, tests?: Maybe<Array<Maybe<(
             { __typename?: 'InstanceTest' }
-            & Pick<InstanceTest, 'title' | 'state'>
+            & Pick<InstanceTest, '[object Object]' | '[object Object]'>
           ) | (
             { __typename?: 'InstanceTestV5' }
-            & Pick<InstanceTestV5, 'title' | 'state'>
+            & Pick<InstanceTestV5, '[object Object]' | '[object Object]'>
           )>>>, stats: (
             { __typename?: 'InstanceStats' }
-            & Pick<InstanceStats, 'tests' | 'pending' | 'passes' | 'failures' | 'skipped' | 'suites' | 'wallClockDuration' | 'wallClockStartedAt' | 'wallClockEndedAt'>
+            & Pick<InstanceStats, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
           ) }
         )> }
       )> }
@@ -559,7 +603,7 @@ export type GetSpecStatsQuery = (
   { __typename?: 'Query' }
   & { specStats?: Maybe<(
     { __typename?: 'SpecStats' }
-    & Pick<SpecStats, 'spec' | 'count' | 'avgWallClockDuration'>
+    & Pick<SpecStats, '[object Object]' | '[object Object]' | '[object Object]'>
   )> }
 );
 
@@ -572,10 +616,10 @@ export type UpdateProjectMutation = (
   { __typename?: 'Mutation' }
   & { updateProject: (
     { __typename?: 'Project' }
-    & Pick<Project, 'projectId'>
+    & Pick<Project, '[object Object]'>
     & { hooks?: Maybe<Array<Maybe<(
       { __typename?: 'Hook' }
-      & Pick<Hook, 'hookId' | 'url' | 'headers' | 'hookEvents' | 'hookType'>
+      & Pick<Hook, '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]' | '[object Object]'>
     )>>> }
   ) }
 );
@@ -615,7 +659,8 @@ export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutat
  * });
  */
 export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
-        return Apollo.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, options);
       }
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
@@ -649,7 +694,8 @@ export type DeleteProjectMutationFn = Apollo.MutationFunction<DeleteProjectMutat
  * });
  */
 export function useDeleteProjectMutation(baseOptions?: Apollo.MutationHookOptions<DeleteProjectMutation, DeleteProjectMutationVariables>) {
-        return Apollo.useMutation<DeleteProjectMutation, DeleteProjectMutationVariables>(DeleteProjectDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteProjectMutation, DeleteProjectMutationVariables>(DeleteProjectDocument, options);
       }
 export type DeleteProjectMutationHookResult = ReturnType<typeof useDeleteProjectMutation>;
 export type DeleteProjectMutationResult = Apollo.MutationResult<DeleteProjectMutation>;
@@ -683,7 +729,8 @@ export type DeleteRunMutationFn = Apollo.MutationFunction<DeleteRunMutation, Del
  * });
  */
 export function useDeleteRunMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRunMutation, DeleteRunMutationVariables>) {
-        return Apollo.useMutation<DeleteRunMutation, DeleteRunMutationVariables>(DeleteRunDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRunMutation, DeleteRunMutationVariables>(DeleteRunDocument, options);
       }
 export type DeleteRunMutationHookResult = ReturnType<typeof useDeleteRunMutation>;
 export type DeleteRunMutationResult = Apollo.MutationResult<DeleteRunMutation>;
@@ -780,15 +827,75 @@ export const GetInstanceDocument = gql`
  *   },
  * });
  */
-export function useGetInstanceQuery(baseOptions?: Apollo.QueryHookOptions<GetInstanceQuery, GetInstanceQueryVariables>) {
-        return Apollo.useQuery<GetInstanceQuery, GetInstanceQueryVariables>(GetInstanceDocument, baseOptions);
+export function useGetInstanceQuery(baseOptions: Apollo.QueryHookOptions<GetInstanceQuery, GetInstanceQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInstanceQuery, GetInstanceQueryVariables>(GetInstanceDocument, options);
       }
 export function useGetInstanceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInstanceQuery, GetInstanceQueryVariables>) {
-          return Apollo.useLazyQuery<GetInstanceQuery, GetInstanceQueryVariables>(GetInstanceDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInstanceQuery, GetInstanceQueryVariables>(GetInstanceDocument, options);
         }
 export type GetInstanceQueryHookResult = ReturnType<typeof useGetInstanceQuery>;
 export type GetInstanceLazyQueryHookResult = ReturnType<typeof useGetInstanceLazyQuery>;
 export type GetInstanceQueryResult = Apollo.QueryResult<GetInstanceQuery, GetInstanceQueryVariables>;
+export const GetLightRunsFeedDocument = gql`
+    query getLightRunsFeed($cursor: String, $filters: [Filters]) {
+  lightRunFeed(cursor: $cursor, filters: $filters) {
+    cursor
+    hasMore
+    runs {
+      runId
+      createdAt
+      meta {
+        ciBuildId
+        projectId
+        commit {
+          sha
+          branch
+          remoteOrigin
+          message
+          authorEmail
+          authorName
+        }
+      }
+      specs {
+        spec
+        instanceId
+        claimed
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLightRunsFeedQuery__
+ *
+ * To run a query within a React component, call `useGetLightRunsFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLightRunsFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLightRunsFeedQuery({
+ *   variables: {
+ *      cursor: // value for 'cursor'
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useGetLightRunsFeedQuery(baseOptions?: Apollo.QueryHookOptions<GetLightRunsFeedQuery, GetLightRunsFeedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLightRunsFeedQuery, GetLightRunsFeedQueryVariables>(GetLightRunsFeedDocument, options);
+      }
+export function useGetLightRunsFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLightRunsFeedQuery, GetLightRunsFeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLightRunsFeedQuery, GetLightRunsFeedQueryVariables>(GetLightRunsFeedDocument, options);
+        }
+export type GetLightRunsFeedQueryHookResult = ReturnType<typeof useGetLightRunsFeedQuery>;
+export type GetLightRunsFeedLazyQueryHookResult = ReturnType<typeof useGetLightRunsFeedLazyQuery>;
+export type GetLightRunsFeedQueryResult = Apollo.QueryResult<GetLightRunsFeedQuery, GetLightRunsFeedQueryVariables>;
 export const GetProjectDocument = gql`
     query getProject($projectId: ID!) {
   project(id: $projectId) {
@@ -820,11 +927,13 @@ export const GetProjectDocument = gql`
  *   },
  * });
  */
-export function useGetProjectQuery(baseOptions?: Apollo.QueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
-        return Apollo.useQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, baseOptions);
+export function useGetProjectQuery(baseOptions: Apollo.QueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
       }
 export function useGetProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
-          return Apollo.useLazyQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
         }
 export type GetProjectQueryHookResult = ReturnType<typeof useGetProjectQuery>;
 export type GetProjectLazyQueryHookResult = ReturnType<typeof useGetProjectLazyQuery>;
@@ -855,10 +964,12 @@ export const GetProjectsDocument = gql`
  * });
  */
 export function useGetProjectsQuery(baseOptions?: Apollo.QueryHookOptions<GetProjectsQuery, GetProjectsQueryVariables>) {
-        return Apollo.useQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, options);
       }
 export function useGetProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProjectsQuery, GetProjectsQueryVariables>) {
-          return Apollo.useLazyQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, options);
         }
 export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
@@ -948,11 +1059,13 @@ export const GetRunDocument = gql`
  *   },
  * });
  */
-export function useGetRunQuery(baseOptions?: Apollo.QueryHookOptions<GetRunQuery, GetRunQueryVariables>) {
-        return Apollo.useQuery<GetRunQuery, GetRunQueryVariables>(GetRunDocument, baseOptions);
+export function useGetRunQuery(baseOptions: Apollo.QueryHookOptions<GetRunQuery, GetRunQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRunQuery, GetRunQueryVariables>(GetRunDocument, options);
       }
 export function useGetRunLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRunQuery, GetRunQueryVariables>) {
-          return Apollo.useLazyQuery<GetRunQuery, GetRunQueryVariables>(GetRunDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRunQuery, GetRunQueryVariables>(GetRunDocument, options);
         }
 export type GetRunQueryHookResult = ReturnType<typeof useGetRunQuery>;
 export type GetRunLazyQueryHookResult = ReturnType<typeof useGetRunLazyQuery>;
@@ -1033,10 +1146,12 @@ export const GetRunsFeedDocument = gql`
  * });
  */
 export function useGetRunsFeedQuery(baseOptions?: Apollo.QueryHookOptions<GetRunsFeedQuery, GetRunsFeedQueryVariables>) {
-        return Apollo.useQuery<GetRunsFeedQuery, GetRunsFeedQueryVariables>(GetRunsFeedDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRunsFeedQuery, GetRunsFeedQueryVariables>(GetRunsFeedDocument, options);
       }
 export function useGetRunsFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRunsFeedQuery, GetRunsFeedQueryVariables>) {
-          return Apollo.useLazyQuery<GetRunsFeedQuery, GetRunsFeedQueryVariables>(GetRunsFeedDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRunsFeedQuery, GetRunsFeedQueryVariables>(GetRunsFeedDocument, options);
         }
 export type GetRunsFeedQueryHookResult = ReturnType<typeof useGetRunsFeedQuery>;
 export type GetRunsFeedLazyQueryHookResult = ReturnType<typeof useGetRunsFeedLazyQuery>;
@@ -1067,11 +1182,13 @@ export const GetSpecStatsDocument = gql`
  *   },
  * });
  */
-export function useGetSpecStatsQuery(baseOptions?: Apollo.QueryHookOptions<GetSpecStatsQuery, GetSpecStatsQueryVariables>) {
-        return Apollo.useQuery<GetSpecStatsQuery, GetSpecStatsQueryVariables>(GetSpecStatsDocument, baseOptions);
+export function useGetSpecStatsQuery(baseOptions: Apollo.QueryHookOptions<GetSpecStatsQuery, GetSpecStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSpecStatsQuery, GetSpecStatsQueryVariables>(GetSpecStatsDocument, options);
       }
 export function useGetSpecStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSpecStatsQuery, GetSpecStatsQueryVariables>) {
-          return Apollo.useLazyQuery<GetSpecStatsQuery, GetSpecStatsQueryVariables>(GetSpecStatsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSpecStatsQuery, GetSpecStatsQueryVariables>(GetSpecStatsDocument, options);
         }
 export type GetSpecStatsQueryHookResult = ReturnType<typeof useGetSpecStatsQuery>;
 export type GetSpecStatsLazyQueryHookResult = ReturnType<typeof useGetSpecStatsLazyQuery>;
@@ -1110,7 +1227,8 @@ export type UpdateProjectMutationFn = Apollo.MutationFunction<UpdateProjectMutat
  * });
  */
 export function useUpdateProjectMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProjectMutation, UpdateProjectMutationVariables>) {
-        return Apollo.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument, options);
       }
 export type UpdateProjectMutationHookResult = ReturnType<typeof useUpdateProjectMutation>;
 export type UpdateProjectMutationResult = Apollo.MutationResult<UpdateProjectMutation>;
