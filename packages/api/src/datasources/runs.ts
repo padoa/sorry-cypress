@@ -179,6 +179,11 @@ export class RunsAPI extends DataSource {
         matchRunAggregation(id),
         projectAggregation,
         lookupAggregation,
+        {$project:{
+          "specsFull.results.tests.title": 0,
+          "specsFull.results.tests.attempts": 0,
+          "specsFull.results.tests.__typename": 0,
+        }}
       ])
       .toArray()) as RunWithFullSpecs[];
 
