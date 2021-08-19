@@ -110,6 +110,11 @@ export class RunsAPI extends DataSource {
       },
       projectAggregation,
       lookupAggregation,
+      {$project:{
+        "specsFull.results.tests.title": 0,
+        "specsFull.results.tests.attempts": 0,
+        "specsFull.results.tests.__typename": 0,
+      }}
     ].filter(negate(isNil));
 
     const results = (await (
