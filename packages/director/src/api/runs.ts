@@ -1,7 +1,5 @@
 import { getExecutionDriver } from '@src/drivers';
 import { isKeyAllowed } from '@src/lib/allowedKeys';
-import { hookEvents } from '@src/lib/hooksEnums';
-import { reportToHook } from '@src/lib/hooksReporter';
 import { CreateRunParameters } from '@src/types';
 import { RequestHandler } from 'express';
 import logger from "@src/padoa/logger";
@@ -30,13 +28,6 @@ export const handleCreateRun: RequestHandler<
   logger.info({ ciBuildId, group }, `>> Machine is joining / creating  a run`);
 
   const response = await executionDriver.createRun(req.body);
-  const runWithSpecs = await executionDriver.getRunWithSpecs(response.runId);
-
-  reportToHook({
-    hookEvent: hookEvents.RUN_START,
-    reportData: { run: runWithSpecs },
-    project: await executionDriver.getProjectById(runWithSpecs.meta.projectId),
-  });
 
   logger.info(response, `<< RUN_START hook called`);
 

@@ -1,7 +1,5 @@
 import { getExecutionDriver, getScreenshotsDriver } from '@src/drivers';
 import { RUN_NOT_EXIST } from '@src/lib/errors';
-import { hookEvents } from '@src/lib/hooksEnums';
-import { reportToHook } from '@src/lib/hooksReporter';
 import { RequestHandler } from 'express';
 import {
   InstanceResult,
@@ -40,16 +38,6 @@ export const handleCreateInstance: RequestHandler = async (req, res) => {
       });
     }
 
-    const run = await executionDriver.getRunWithSpecs(runId);
-    reportToHook({
-      hookEvent: hookEvents.INSTANCE_START,
-      reportData: {
-        run,
-        instance,
-      },
-      project: await executionDriver.getProjectById(run.meta.projectId),
-    });
-
     logger.info({ instanceId: instance.instanceId}, `<< INSTANCE_START hook called`, );
 
     //Instance Start
@@ -77,43 +65,6 @@ export const handleUpdateInstance: RequestHandler = async (req, res) => {
   logger.info({ instanceId }, `>> Received instance result`);
   await executionDriver.setInstanceResults(instanceId, result);
 
-  const instance = await executionDriver.getInstanceById(instanceId);
-  const run = await executionDriver.getRunWithSpecs(instance.runId);
-  const project = await executionDriver.getProjectById(run.meta.projectId);
-
-  const isRunStillRunning = run.specs.reduce(
-    (wasRunning, currentSpec, index) => {
-      return (
-        !currentSpec.claimed || !run.specsFull[index]?.results || wasRunning
-      );
-    },
-    false
-  );
-
-  reportToHook({
-    hookEvent: hookEvents.INSTANCE_FINISH,
-    reportData: {
-      run,
-      instance,
-    },
-    project,
-  }).then(() => {
-    logger.info({ instanceId: instance.instanceId }, `<< INSTANCE_FINISH hook called`, );
-    // We should probably add a flag to the actual run here aswell
-    // We should also probably do a check to see if all specs passed and set a flag of success or fail
-    if (!isRunStillRunning) {
-      reportToHook({
-        hookEvent: hookEvents.RUN_FINISH,
-        reportData: {
-          run,
-          instance,
-        },
-        project,
-      });
-      logger.info({ runId: run.runId }, `<< RUN_FINISH hook called`, );
-    }
-  });
-
   const screenshotUploadUrls: ScreenshotUploadInstruction[] = await screenshotsDriver.getScreenshotsUploadUrls(
     instanceId,
     result
@@ -125,17 +76,17 @@ export const handleUpdateInstance: RequestHandler = async (req, res) => {
   );
 
   if (screenshotUploadUrls.length > 0) {
-    screenshotUploadUrls.forEach((screenshot: ScreenshotUploadInstruction) => {
+    await Promise.all(screenshotUploadUrls.map((screenshot: ScreenshotUploadInstruction) => {
       executionDriver.setScreenshotUrl(
         instanceId,
         screenshot.screenshotId,
         screenshot.readUrl
       );
-    });
+    }));
   }
 
   if (videoUploadInstructions) {
-    executionDriver.setVideoUrl({
+    await executionDriver.setVideoUrl({
       instanceId,
       videoUrl: videoUploadInstructions.readUrl,
     });
