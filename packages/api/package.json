@@ -20,7 +20,7 @@
     "build": "npm run generate && npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "types:watch": "tsc --noEmit --watch",
-    "build:js": "babel src --out-dir dist --extensions:wq \".ts\" --source-maps inline --copy-files",
+    "build:js": "babel src --out-dir dist --extensions \".ts\" --source-maps inline --copy-files",
     "start": "node ./dist/",
     "clean": "rimraf ./dist",
     "test": "echo \"@sorry-cypress/api\"",
@@ -38,7 +38,6 @@
     "@graphql-codegen/typescript-resolvers": "^1.13.4",
     "@types/graphql-iso-date": "^3.4.0",
     "@types/lodash": "^4.14.161",
-    "@types/mongodb": "^3.5.32",
     "@types/node": "^14.11.2",
     "@types/uuid": "^8.3.0",
     "babel-plugin-module-resolver": "^4.0.0",
@@ -47,6 +46,7 @@
     "typescript": "^4.0.3"
   },
   "dependencies": {
+    "@types/mongodb": "^3.6.16",
     "apollo-server": "^2.18.1",
     "apollo-server-express": "^2.19.2",
     "dotenv": "^8.1.0",
@@ -54,7 +54,7 @@
     "graphql": "^15.3.0",
     "graphql-iso-date": "^3.6.1",
     "lodash": "^4.17.20",
-    "mongodb": "^3.7.3",
+    "mongodb": "^3.6.5",
     "plur": "^4.0.0",
     "pretty-quick": "^2.0.1",
     "uuid": "^3.3.2"
