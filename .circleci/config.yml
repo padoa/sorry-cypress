@@ -22,7 +22,7 @@ aliases:
 jobs:
   Build Director:
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-2004:202010-01
       docker_layer_caching: true
     environment:
       DOCKER_BUILDKIT: '1'
@@ -48,7 +48,7 @@ jobs:
 
   Build API:
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-2004:202010-01
       docker_layer_caching: true
     environment:
       DOCKER_BUILDKIT: '1'
@@ -71,7 +71,7 @@ jobs:
 
   Build Dashboard:
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-2004:202010-01
       docker_layer_caching: true
     environment:
       DOCKER_BUILDKIT: '1'
