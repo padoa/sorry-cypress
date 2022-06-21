@@ -211,7 +211,6 @@ type InstanceTest {
   testId: String!
   title: [String]
   state: String # prob enum
-  body: String
   stack: String
   error: String
   # timings: InstanceTestTimings
@@ -224,7 +223,6 @@ type InstanceTestV5 {
   testId: String!
   title: [String]
   state: String # prob enum
-  body: String
   displayError: String
   attempts: [TestAttempt!]!
 }
