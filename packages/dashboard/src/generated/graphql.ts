@@ -130,7 +130,6 @@ export type InstanceTest = {
   testId: Scalars['String'];
   title?: Maybe<Array<Maybe<Scalars['String']>>>;
   state?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
   stack?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   wallClockStartedAt?: Maybe<Scalars['String']>;
@@ -144,7 +143,6 @@ export type InstanceTestV5 = {
   testId: Scalars['String'];
   title?: Maybe<Array<Maybe<Scalars['String']>>>;
   state?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
   displayError?: Maybe<Scalars['String']>;
   attempts: Array<TestAttempt>;
 };
