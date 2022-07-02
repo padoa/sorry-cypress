@@ -144,11 +144,11 @@ podSecurityContext: {}
 securityContext: {}
 
 nodeSelector:
-  dedicated: "ToolkitNode"
+  dedicated: "Memory"
 tolerations:
   - key: "dedicated"
     operator: "Equal"
-    value: "ToolkitNode"
+    value: "Memory"
     effect: "NoSchedule"
 
 affinity: {}
