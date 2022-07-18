@@ -1,0 +1,158 @@
+global: {}
+
+bucket:
+  name: sorry-cypress-aks
+  region: eu-west-1
+  endpoint: s3.amazonaws.com
+  expiration: '604800'
+
+storage:
+  size: 128Gi
+
+api:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: padoa.azurecr.io/padoa-tools/sorry-cypress-api
+    tag: '{{ .Values.global.sorry_cypress_tag }}'
+  service:
+    name: api-http
+    type: ClusterIP
+    port: 4000
+    protocol: TCP
+  ingress:
+    enabled: true
+    host_prefix: sorry-cypress-api
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      traefik.ingress.kubernetes.io/router.tls: 'true'
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      cpu: 1.0
+      memory: 550Mi
+  serviceMonitoring:
+    enabled: true
+    bearer_token_secret_key: prometheus_bearer
+    path: /metrics
+    interval: 15s
+    timeout: 10s # < interval
+
+dashboard:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: padoa.azurecr.io/padoa-tools/sorry-cypress-dashboard
+    tag: '{{ .Values.global.sorry_cypress_tag }}'
+  service:
+    name: dashboard-http
+    type: ClusterIP
+    port: 8080
+    protocol: TCP
+  ingress:
+    enabled: true
+    host_prefix: sorry-cypress-dashboard
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      traefik.ingress.kubernetes.io/router.tls: 'true'
+      traefik.ingress.kubernetes.io/router.middlewares: ip-whitelist-ip-whitelist@kubernetescrd,traefik-forward-auth-sso-forward-auth@kubernetescrd
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      cpu: 1.0
+      memory: 550Mi
+
+director:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: padoa.azurecr.io/padoa-tools/sorry-cypress-director
+    tag: '{{ .Values.global.sorry_cypress_tag }}'
+  service:
+    name: director-http
+    type: ClusterIP
+    port: 1234
+    protocol: TCP
+  ingress:
+    enabled: true
+    host_prefix: sorry-cypress-director
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      traefik.ingress.kubernetes.io/router.tls: 'true'
+  probe:
+    readiness:
+      initialDelaySeconds: 5
+      timeoutSeconds: 3
+    liveness:
+      timeoutSeconds: 3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      cpu: 1.0
+      memory: 550Mi
+
+mongo:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: mongo
+    tag: '4.0'
+  volumeMount:
+    name:
+  service:
+    name: mongo
+    type: ClusterIP
+    port: 27017
+    protocol: TCP
+  resources:
+    requests:
+      cpu: 100m
+      memory: 2048Mi
+    limits:
+      cpu: 1.0
+      memory: 2048Mi
+
+connectMongo:
+  port: 27017
+
+tcpRoute:
+  enabled: false
+
+cleanmongojob:
+  enabled: false
+  alert_severity: low
+  schedule: "0 0 * * *"
+  limit_cpu: "200m"
+  limit_memory: "300Mi"
+  request_cpu: "50m"
+  request_memory: "200Mi"
+  backoff_limit: 20
+
+imagePullSecrets: []
+
+image:
+  pullPolicy: IfNotPresent
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector:
+  dedicated: "ToolkitNode"
+tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "ToolkitNode"
+    effect: "NoSchedule"
+
+affinity: {}
+
+serviceAccount:
+  create: false
+  name:
