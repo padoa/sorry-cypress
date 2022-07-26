@@ -114,6 +114,7 @@ export class RunsAPI extends DataSource {
         "specsFull.results.tests.title": 0,
         "specsFull.results.tests.attempts": 0,
         "specsFull.results.tests.__typename": 0,
+        "specsFull.results.tests.body": 0,
       }}
     ].filter(negate(isNil));
 
@@ -146,6 +147,12 @@ export class RunsAPI extends DataSource {
         $limit: PAGE_LIMIT + 1,
       },
       projectAggregation,
+      {$project:{
+        "specsFull.results.tests.title": 0,
+        "specsFull.results.tests.attempts": 0,
+        "specsFull.results.tests.__typename": 0,
+        "specsFull.results.tests.body": 0,
+      }}
     ].filter(negate(isNil));
 
     const results = (await (
@@ -188,6 +195,7 @@ export class RunsAPI extends DataSource {
           "specsFull.results.tests.title": 0,
           "specsFull.results.tests.attempts": 0,
           "specsFull.results.tests.__typename": 0,
+          "specsFull.results.tests.body": 0,
         }}
       ])
       .toArray()) as RunWithFullSpecs[];

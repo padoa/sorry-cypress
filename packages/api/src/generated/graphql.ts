@@ -132,7 +132,6 @@ export type InstanceTest = {
   testId: Scalars['String'];
   title?: Maybe<Array<Maybe<Scalars['String']>>>;
   state?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
   stack?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   wallClockStartedAt?: Maybe<Scalars['String']>;
@@ -146,7 +145,6 @@ export type InstanceTestV5 = {
   testId: Scalars['String'];
   title?: Maybe<Array<Maybe<Scalars['String']>>>;
   state?: Maybe<Scalars['String']>;
-  body?: Maybe<Scalars['String']>;
   displayError?: Maybe<Scalars['String']>;
   attempts: Array<TestAttempt>;
 };
@@ -609,7 +607,6 @@ export type InstanceTestResolvers<ContextType = any, ParentType extends Resolver
   testId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stack?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   wallClockStartedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -625,7 +622,6 @@ export type InstanceTestV5Resolvers<ContextType = any, ParentType extends Resolv
   testId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   displayError?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   attempts?: Resolver<Array<ResolversTypes['TestAttempt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
