@@ -87,16 +87,33 @@ export async function reportToSlack(
       pending > 0 ? ':large_yellow_circle:' : ':white_circle:'
     } *Ignored:* ${pending}\n\n\n` +
     `${
-      flaky > 0 ? `\n\n\n:large_yellow_circle: *Flaky*: ${flaky}` : ''}`;
+      flaky > 0 ? `:large_yellow_circle: *Flaky*: ${flaky}` : ''}`;
+
+  
+  const branchLink = (event.run.meta.commit?.branch || event.run.meta.commit?.remoteOrigin) &&
+  `${event.run.meta.commit.remoteOrigin?.replace("\.git", '')}/${event.run.meta.commit.branch}`;
+
+  const commitLink = (event.run.meta.commit?.branch || event.run.meta.commit?.sha) &&
+  `${event.run.meta.commit.remoteOrigin?.replace("\.git", '')}/${event.run.meta.commit.sha}`;
+
+  const shortCommitMessage = (event.run.meta.commit?.message) &&
+  `${event.run.meta.commit?.message.replace("\r", '').replace("\n", '')}`;
+
+  console.log("Short commit Message is :", shortCommitMessage);
 
   const commitDescription =
-    (event.run.meta.commit?.branch || event.run.meta.commit?.message) &&
-    `*Branch:*\n${event.run.meta.commit.branch}\n\n*Commit:*\n${truncate(
+    (event.run.meta.commit?.branch || event.run.meta.commit?.message || event.run.meta.commit.authorName || event.run.meta.commit.remoteOrigin || branchLink || commitLink || shortCommitMessage) &&
+    `*Branch:*\n${event.run.meta.commit.branch}
+    \n\n*Commit:*\n${truncate(
       event.run.meta.commit.message,
       {
         length: 100,
       }
-    )}`;
+    )}\n\n*Author:*\n${event.run.meta.commit.authorName}
+      \n\n*Branch link:*\n<${branchLink}|${event.run.meta.commit.branch}>
+      \n\n*Commit link:*\n<${commitLink}|${shortCommitMessage}>`;
+  
+  console.log("Short commit Desc is :", commitDescription);
 
   axios({
     method: 'post',
