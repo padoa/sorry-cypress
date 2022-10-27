@@ -79,12 +79,15 @@ export async function reportToSlack(
     } *Passed:* ${passes}\n\n\n` +
     `${
       failures > 0 ? ':red_circle:' : ':white_circle:'
-    } *Failed*: ${failures}` +
-    `${skipped > 0 ? ':red_circle:' : ':white_circle:'} *Skipped*: ${skipped}` +
+    } *Failed*: ${failures}\n\n\n` +
+    `${
+      skipped > 0 ? ':red_circle:' : ':white_circle:'
+    } *Skipped*: ${skipped}\n\n\n` +
     `${
       pending > 0 ? ':large_yellow_circle:' : ':white_circle:'
     } *Ignored:* ${pending}\n\n\n` +
-    `${flaky > 0 ? `\n\n\n:large_yellow_circle: *Flaky*: ${flaky}` : ''}`;
+    `${
+      flaky > 0 ? `\n\n\n:large_yellow_circle: *Flaky*: ${flaky}` : ''}`;
 
   const commitDescription =
     (event.run.meta.commit?.branch || event.run.meta.commit?.message) &&
