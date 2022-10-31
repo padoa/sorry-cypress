@@ -89,31 +89,39 @@ export async function reportToSlack(
     `${
       flaky > 0 ? `:large_yellow_circle: *Flaky*: ${flaky}` : ''}`;
 
-  
-  const branchLink = (event.run.meta.commit?.branch || event.run.meta.commit?.remoteOrigin) &&
-  `${event.run.meta.commit.remoteOrigin?.replace("\.git", '')}/${event.run.meta.commit.branch}`;
 
-  const commitLink = (event.run.meta.commit?.branch || event.run.meta.commit?.sha) &&
-  `${event.run.meta.commit.remoteOrigin?.replace("\.git", '')}/${event.run.meta.commit.sha}`;
+  let commitDescription ;
 
-  const shortCommitMessage = (event.run.meta.commit?.message) &&
-  `${event.run.meta.commit?.message.replace("\r", '').replace("\n", '')}`;
+  if (event.run.meta.commit?.remoteOrigin?.startsWith('https://github.com')){
 
-  console.log("Short commit Message is :", shortCommitMessage);
+    const branchLink = (event.run.meta.commit?.remoteOrigin || event.run.meta.commit?.branch) &&
+    `${event.run.meta.commit.remoteOrigin?.replace("\.git", '')}/${event.run.meta.commit.branch}`;
 
-  const commitDescription =
-    (event.run.meta.commit?.branch || event.run.meta.commit?.message || event.run.meta.commit.authorName || event.run.meta.commit.remoteOrigin || branchLink || commitLink || shortCommitMessage) &&
-    `*Branch:*\n${event.run.meta.commit.branch}
-    \n\n*Commit:*\n${truncate(
+    const commitLink = (event.run.meta.commit?.remoteOrigin || event.run.meta.commit?.sha) &&
+    `${event.run.meta.commit.remoteOrigin?.replace("\.git", '')}/${event.run.meta.commit.sha}`;
+
+    const sanitizedCommitMessage = (event.run.meta.commit?.message) &&
+    `${truncate(event.run.meta.commit?.message,{ length: 100 ,}).replace("\r", '').replace("\n", '')}`;
+
+
+    commitDescription =
+    (event.run.meta.commit?.branch || branchLink || event.run.meta.commit.authorName || commitLink || sanitizedCommitMessage) &&
+    `*Branch:*\n<${branchLink}|${event.run.meta.commit.branch}>
+    \n*Commit:*\n<${commitLink}|${sanitizedCommitMessage}>
+    \n*Author:*\n${event.run.meta.commit.authorName}\n\n`;
+
+  } else {
+
+    commitDescription =
+    (event.run.meta.commit?.branch || event.run.meta.commit?.message) &&
+    `*Branch:*\n${event.run.meta.commit.branch}\n\n*Commit:*\n${truncate(
       event.run.meta.commit.message,
       {
         length: 100,
       }
-    )}\n\n*Author:*\n${event.run.meta.commit.authorName}
-      \n\n*Branch link:*\n<${branchLink}|${event.run.meta.commit.branch}>
-      \n\n*Commit link:*\n<${commitLink}|${shortCommitMessage}>`;
-  
-  console.log("Short commit Desc is :", commitDescription);
+    )}`;
+
+  }
 
   axios({
     method: 'post',
