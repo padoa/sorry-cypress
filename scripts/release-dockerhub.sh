@@ -45,9 +45,11 @@ function getTagsArg() {
 
 function dockerBuildAndPush() {
   echo 🔨 Building ${2} from ${1}
-  echo docker buildx build --file ${1}/Dockerfile --platform=linux/arm64/v8,linux/amd64 $(getTagsArg ${2}) --provenance=false --push
+  echo docker buildx build --file ${1}/Dockerfile --platform=linux/arm64/v8,linux/amd64 --tag "padoa.azurecr.io/sorry-cypress/${1}:test-paul" --provenance=false --push
+  echo docker push "padoa.azurecr.io/sorry-cypress/${1}:test-paul"
   echo ========================
-  docker buildx build --file ${1}/Dockerfile --platform=linux/arm64/v8,linux/amd64 $(getTagsArg ${2}) --provenance=false --push .
+  docker buildx build --file ${1}/Dockerfile --platform=linux/arm64/v8,linux/amd64 --tag "padoa.azurecr.io/sorry-cypress/${1}:test-paul" --provenance=false .
+  docker push "padoa.azurecr.io/sorry-cypress/${1}:test-paul"
   echo ========================
   echo ✅ Build \& push completed ${2} from ${1} 
 }
