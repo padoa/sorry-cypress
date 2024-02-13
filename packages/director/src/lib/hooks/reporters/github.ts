@@ -81,6 +81,7 @@ export async function reportStatusToGithub(
 
   if (eventType === HookEvent.INSTANCE_FINISH) {
     data.state = 'pending';
+    return;
   }
 
   if (eventType === HookEvent.RUN_FINISH) {
