@@ -2,6 +2,7 @@ export interface AggregationFilter {
   key: string;
   value?: string;
   like?: string | null;
+  operator?: string | null;
 }
 
 export const filtersToAggregations = (filters?: AggregationFilter[]) => {
