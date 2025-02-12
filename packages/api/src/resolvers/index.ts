@@ -106,20 +106,19 @@ export const resolvers = {
             if (filter.value) {
               // Handle the operator for createdAt (gte, gt, lte, lt)
               switch (filter.operator) {
-                case 'gte':  // Greater than or equal to
-                case 'gt':   // Greater than
-                case 'lte':  // Less than or equal to
-                case 'lt':   // Less than
+                case 'gte': // Greater than or equal to
+                case 'gt': // Greater than
+                case 'lte': // Less than or equal to
+                case 'lt': // Less than
                   // Ensure filter.value is a valid date before creating Date object
-                  filter.value = new Date(filter.value).toISOString();  // Convert to ISO string if valid
+                  filter.value = new Date(filter.value).toISOString(); // Convert to ISO string if valid
                   break;
                 default:
                   // If the operator is not recognized, throw an error or skip processing
-                  throw new Error(`Unsupported operator for createdAt: ${filter.operator}`);
+                  throw new Error(
+                    `Unsupported operator for createdAt: ${filter.operator}`
+                  );
               }
-
-              // After processing, remove the operator from the filter
-              filter.operator = undefined;
             } else {
               throw new Error('Invalid value for createdAt filter');
             }
@@ -130,8 +129,6 @@ export const resolvers = {
       // Pass the modified filters to the data source for querying
       return dataSources.runsAPI.getAllRuns({ orderDirection, filters });
     },
-
-
 
     ciBuilds: (
       _: any,
