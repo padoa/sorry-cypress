@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3.5.0
         with:
           path: '**/node_modules'
           key: v1-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -20,7 +20,7 @@ jobs:
             v1-${{ runner.os }}-yarn-
 
       - name: Cache turbo build setup
-        uses: actions/cache@v3
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3.5.0
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
