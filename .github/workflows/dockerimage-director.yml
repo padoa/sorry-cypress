@@ -7,13 +7,16 @@ on:
     tags:
       - v*
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     if: "!contains(toJSON(github.event.commits.*.message), '[skip ci]')"
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@28c7f3d2b5162b5ddd3dfd9a45aa55eaf396478b # v2.3.1
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2.2.0

@@ -13,7 +13,7 @@ jobs:
     if: "!contains(toJSON(github.event.commits.*.message), '[skip ci]')"
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@28c7f3d2b5162b5ddd3dfd9a45aa55eaf396478b # v2.3.1
 
       - uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3.5.0
         with:
